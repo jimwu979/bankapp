@@ -1,30 +1,30 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="nav" class="nav" :class="{'open': navStatus}" @click="toggleNav">
+    <div class="content" v-on:click.stop>
+      <div class="memberInformation">
+        <div class="name">吳新蓁</div>
+      </div>
+      <div class="linkGroup">
+        <router-link @click="toggleNav" class="link" to="/statistics">統計</router-link>
+        <router-link @click="toggleNav" class="link" to="/settingClass">類別</router-link>
+        <router-link @click="toggleNav" class="link" to="/account">帳號</router-link>
+      </div>
+    </div>
   </div>
-  <router-view/>
+  <router-view @openNav="toggleNav"/>
 </template>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  data() {
+    return {
+      navStatus: false,
+    }
+  },
+  methods: {
+    toggleNav: function(){
+      this.navStatus = !this.navStatus;
     }
   }
 }
-</style>
+</script>
+<style lang="scss" src="@/scss/App.scss"></style>

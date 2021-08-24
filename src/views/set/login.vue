@@ -9,7 +9,7 @@
 export default {
   name: 'login',
   components: {
-    board, header, menu
+      
   }
 }
 </script>

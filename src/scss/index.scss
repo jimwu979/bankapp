@@ -1,0 +1,403 @@
+@import 'main.scss';
+
+body{
+    .index{
+        header{
+            .container{
+                .left{
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    justify-content: center;
+                    hr{
+                        width: 18px;
+                        height: 2px;
+                        border: none;
+                        display: inline-block;
+                        background-color: $icon_black;
+                        ~hr{
+                            margin-top: 4px;
+                        }
+                    }
+                }
+                .center{
+                    .month{
+                        width: 60px;
+                        text-align: right;
+                        position: relative;
+                        padding: 0 20px 0 0;
+                        .backgroundCover{
+                            left: 0;
+                            opacity: 0;
+                            width: 100%;
+                            z-index: -1;
+                            height: 100%;
+                            position: fixed;
+                            transition: .3s;
+                            top: $header_height;
+                            pointer-events: none;
+                            background-color: $lightbox_background;
+                        }
+                        span{
+                            font-weight: 600;
+                            line-height: $header_height;
+                        }
+                        &:after{
+                            right: 7px;
+                            content: '';
+                            position: absolute;
+                            top: calc(50% - 1px);
+                            display: inline-block;
+                            border-top: 4px solid $icon_black;
+                            border-left: 4px solid transparent;
+                            border-right: 4px solid transparent;
+                            border-bottom: 0px solid transparent;
+                        }
+                        .monthlyCalendar{
+                            left: 0;
+                            opacity: 0;
+                            width: 100%;
+                            position: fixed;
+                            transition: .3s;
+                            top: $header_height;
+                            pointer-events: none;
+                            background-color: #FFF;
+                            box-shadow: 0 8px 8px rgba(0,0,0,.02);
+                            .container{
+                                display: flex;
+                                align-items: center;
+                                flex-direction: column;
+                                justify-content: center;
+                                .year{
+                                    height: 45px;
+                                    display: flex;
+                                    line-height: 45px;
+                                    flex-direction: row;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    margin-left: calc(-1 * #{$screen_side});
+                                    margin-right: calc(-1 * #{$screen_side});
+                                    width: calc(100% + #{$screen_side} + #{$screen_side});
+                                    >div{
+                                        flex: 1;
+                                        width: 60px;
+                                        height: 45px;
+                                        line-height: 45px;
+                                        &:before{
+                                            width: 10px;
+                                            content: '';
+                                            height: 10px;
+                                            line-height: 45px;
+                                            text-align: center;
+                                            display: inline-block;
+                                            border-top: 2px solid $icon_black;
+                                            border-left: 2px solid $icon_black;
+                                            border-right: 0px solid $icon_black;
+                                            border-bottom: 0px solid $icon_black;
+                                        }
+                                        &:nth-of-type(1){
+                                            text-align: left;
+                                            padding-left: calc(10px + #{$screen_side});
+                                            &:before{
+                                                transform: rotateZ(-45deg);
+                                            }
+                                        }
+                                        &:nth-last-of-type(1){
+                                            text-align: right;
+                                            padding-right: calc(10px + #{$screen_side});
+                                            &:before{
+                                                transform: rotateZ(135deg);
+                                            }
+                                        }
+                                    }
+                                    span{
+                                        width: 60px;
+                                        text-align: center;
+                                        display: inline-block;
+                                    }
+                                }
+                                ol{
+                                    width: 100%;
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    align-items: center;
+                                    flex-direction: row;
+                                    justify-content: center;
+                                    li{
+                                        height: 45px;
+                                        line-height: 45px;
+                                        position: relative;
+                                        text-align: center;
+                                        width: calc(100% / 6);
+                                        display: inline-block;
+                                        box-sizing: content-box;
+                                        &:before{
+                                            opacity: 0;
+                                            width: 45px;
+                                            z-index: -1;
+                                            content: '';
+                                            height: 45px;
+                                            position: absolute;
+                                            border-radius: 50%;
+                                            transform: scale(.8);
+                                            display: inline-block;
+                                            left: calc(50% - 23px);
+                                            transition: .2s linear;
+                                            background-color: $main_color;
+                                        }
+                                        &:nth-of-type(6){
+                                            ~li{
+                                                padding-bottom: 10px;
+                                            }
+                                        }
+                                        &.now{
+                                            color: #000;
+                                            font-weight: 600;
+                                            &:before{
+                                                opacity: .7;
+                                                transform: scale(1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        &.open{
+                            .backgroundCover{
+                                opacity: 1;
+                                pointer-events: auto;
+                            }
+                            .monthlyCalendar{
+                                opacity: 1;
+                                pointer-events: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        main{
+            .container{
+                display: flex;
+                padding-top: 10px;
+                align-items: stretch;
+                justify-content: flex-start;
+                flex-direction: column-reverse;
+                .total{
+                    order: 1;
+                    display: flex;
+                    padding: 15px 5px;
+                    align-items: center;
+                    flex-direction: row;
+                    justify-content: space-around;
+                    .totalType{
+                        display: flex;
+                        align-items: center;
+                        width: calc(100% / 3);
+                        flex-direction: column;
+                        justify-content: center;
+                        span{
+                            &:nth-of-type(1){
+                                color: #999;
+                            }
+                            &:nth-of-type(2){
+                                font-size: 16px;
+                                font-weight: 600;
+                            }
+                        }
+                        ~li{
+                            position: relative;
+                            &:before{
+                                left: 0;
+                                width: 2px;
+                                content: '';
+                                height: 26px;
+                                position: absolute;
+                                top: calc(50% - 13px);
+                                background-color: #EEE;
+                            }
+                        }
+                    }
+                }
+                .day{
+                    .title{
+                        display: flex;
+                        margin: 2px 0 0;
+                        align-items: center;
+                        flex-direction: row;
+                        padding: 0 $screen_side;
+                        justify-content: space-between;
+                        border-bottom: 1px solid #EEE;
+                        div{
+                            color: #bbb;
+                            font-size: 12px;
+                            &:nth-of-type(1){
+
+                            }
+                            &:nth-of-type(2){
+                                span{
+                                    color: #999;
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                    .cost_list{
+                        .cost_item{
+                            width: 100%;
+                            height: 50px;
+                            display: flex;  
+                            overflow: hidden;
+                            position: relative;
+                            align-items: center;
+                            flex-direction: row;
+                            padding: 0 $screen_side;              
+                            justify-content: flex-start;
+                            .icon{
+                                width: 30px;
+                                height: 30px;
+                                border-radius: 50%; 
+                                background-size: 50%;
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                background-color: rgb(152, 221, 255);
+                                &.color_0{
+                                    background-color: #E37C76;
+                                }
+                                &.color_1{
+                                    background-color: #E66F97;
+                                }
+                                &.color_2{
+                                    background-color: #6ABDDF;
+                                }
+                                &.color_3{
+                                    background-color: #6FC4AA;
+                                }
+                                &.color_4{
+                                    background-color: #94CE60;
+                                }
+                                &.color_5{
+                                    background-color: #F5BD62;
+                                }
+                                &.color_6{
+                                    background-color: #B883D3;
+                                }
+                                &.color_7{
+                                    background-color: #879BEA;
+                                }
+                                &.icon_0{
+                                    background-size: 100%;
+                                    background-image: url('../assets/classIcon/icon_0.png');
+                                }
+                                &.icon_1{
+                                    background-image: url('../assets/classIcon/icon_1.png');
+                                }
+                                &.icon_2{
+                                    background-image: url('../assets/classIcon/icon_2.png');
+                                }
+                                &.icon_3{
+                                    background-image: url('../assets/classIcon/icon_3.png');
+                                }
+                                &.icon_4{
+                                    background-size: 70%;
+                                    background-image: url('../assets/classIcon/icon_4.png');
+                                }
+                                &.icon_5{
+                                    background-size: 70%;
+                                    background-image: url('../assets/classIcon/icon_5.png');
+                                }
+                                &.icon_6{
+                                    background-size: 70%;
+                                    background-image: url('../assets/classIcon/icon_6.png');
+                                }
+                                &.icon_7{
+                                    background-size: 70%;
+                                    background-image: url('../assets/classIcon/icon_7.png');
+                                }
+                                &.icon_8{
+                                    background-size: 70%;
+                                    background-image: url('../assets/classIcon/icon_8.png');
+                                }
+                                &.icon_9{
+                                    background-image: url('../assets/classIcon/icon_9.png');
+                                }
+                                &.icon_10{
+                                    background-image: url('../assets/classIcon/icon_10.png');
+                                }
+                                &.icon_11{
+                                    background-image: url('../assets/classIcon/icon_11.png');
+                                }
+                                &.icon_12{
+                                    background-image: url('../assets/classIcon/icon_12.png');
+                                }
+                                &.icon_13{
+                                    background-image: url('../assets/classIcon/icon_13.png');
+                                }
+                                &.icon_14{
+                                    background-image: url('../assets/classIcon/icon_14.png');
+                                }
+                                &.icon_15{
+                                    background-image: url('../assets/classIcon/icon_15.png');
+                                }
+                                &.icon_16{
+                                    background-image: url('../assets/classIcon/icon_16.png');
+                                }
+                            }
+                            .class{
+                                flex: 1;
+                                display: flex;
+                                overflow: hidden;
+                                padding-left: 10px;
+                                white-space: nowrap;
+                                align-items: center;
+                                flex-direction: row;
+                                justify-content: flex-start;
+                                span{
+                                    flex: 1;
+                                    height: 30px;
+                                    color: #ccc;
+                                    font-size: 12px;
+                                    overflow: hidden;
+                                    line-height: 32px;
+                                    padding-left: 5px;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+                            .number{
+                                color: #999;
+                                text-align: right;
+                                line-height: 50px;
+                                padding-left: 15px;
+                                right: $screen_side;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .add_record{
+            width: 60px;
+            height: 60px;
+            bottom: 15px;
+            position: fixed;
+            border-radius: 50%;
+            background-color: $main_color;
+            right: calc(#{$screen_side} + 5px);
+            box-shadow: 0px 4px 16px rgba(0,0,0,.2);
+            &:before, &:after{
+                width: 20px;
+                height: 2px;
+                content: '';
+                position: absolute;
+                top: calc(50% - 1px);
+                display: inline-block;
+                left: calc(50% - 10px);
+                background-color: #FFF;
+            }
+            &:before{
+                transform: rotateZ(90deg);
+            }
+        }
+    }
+}

@@ -1,0 +1,116 @@
+// varibale
+$main_color: #F9DB61;
+$text_black: #333;
+$icon_black: #999;
+$clicking_gray: #EEE;
+$background_blue: #fafeff;
+$screen_side: 10px;
+$header_height: 45px;
+$board_border: 1px solid #eee;
+$board_shadow: 0 1px 3px rgba(0,0,0,.1);
+$lightbox_background: rgba(0,0,0,.5);
+
+// reset
+*{
+    border: 0;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font-size: 14px;
+    list-style: none;
+    border-radius: 0;
+    line-height: 22px;
+    border-spacing: 0;
+    letter-spacing: 0;
+    color: $text_black;
+    font-weight: normal;
+    box-sizing: border-box;
+    background-size: cover;
+    vertical-align: baseline;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: '微軟正黑體', 'Noto Sans TC';
+    -webkit-tap-highlight-color: transparent;
+}
+a:link, a:visited, a:hover, a:active{
+    color: $text_black;
+    text-decoration: none;
+}
+
+html{
+	width: 100%;
+	overflow-x: hidden;
+}
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: $background_blue;
+    >div{
+        min-width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+        padding-bottom: 70px;
+        padding-top: $header_height;
+    }
+}
+.container{
+    width: 100%;
+    margin: 0 auto;
+    padding-left: $screen_side;
+    padding-right: $screen_side;
+}
+header{
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    position: fixed;
+    height: $header_height;
+    background-color: #fff;
+    box-shadow: $board_shadow;
+    border-bottom: $board_border;
+    .container{
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        .left, .right{
+            width: $header_height;
+            height: $header_height;
+            padding: 0 $screen_side;
+        }
+        .left{
+            margin-left: -$screen_side;
+        }
+        .right{
+            margin-right: -$screen_side;
+        }
+        .center{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+    }
+}
+.board{
+    border-radius: 4px;
+    border: $board_border;
+    background-color: #fff;
+    box-shadow: $board_shadow;
+    +.board{
+        margin-top: $screen_side;
+    }
+}
+.clickStyle{
+    cursor: pointer;
+    background-color: #FFF;
+    transition: background-color .2s;
+    &.mousedown{
+        background-color: $clicking_gray;
+    }
+}

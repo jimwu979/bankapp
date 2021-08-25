@@ -8,30 +8,7 @@
           <hr>
         </div>
         <div class="center">
-          <div class="month"
-               @click="toggleCalendar()"
-               v-clickStyle
-               :class="{'mousedown': false, 'open': CalendarIsOpen}">
-            <div @click="toggleCalendar(false)" v-stopPropagation class="backgroundCover"></div>
-            <span>8月</span>
-            <!-- <monthlyCalendar></monthlyCalendar> -->
-            <div class="monthlyCalendar" @click.stop="toggleCalendar()">
-              <div class="container">
-                <div class="year">
-                  <div @click.stop="toggleYear(-1)" v-clickStyle></div>
-                  <span>{{nowYear}}</span>
-                  <div @click.stop="toggleYear(1)" v-clickStyle></div>
-                </div>
-                <ol>
-                  <li v-for="m in 12" 
-                      :key="m" 
-                      :class="{'now': m == nowMonth}"
-                      @click="toggleMonth(m)"
-                  >{{m}}月</li>
-                </ol>
-              </div>
-            </div>
-          </div>
+          <monthlyCalendar></monthlyCalendar>
         </div>
       </div>
     </header>
@@ -55,7 +32,7 @@
         </div>
         <div class="day board" v-for="(day, day_index) in costList" :key="day_index">
           <div class="title">
-            <div>{{nowMonth}}/{{costList[day_index]['date']}} 週四</div>
+            <div>{{nowMonth}}/{{costList[day_index]['date']}} 週{{dayOfTheWeek[day_index]}}</div>
             <div>支出: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
@@ -75,10 +52,9 @@
     <router-link class="add_record" to="/record/addRecord"></router-link>
   </div>
 </template>
-
 <script>
 import monthlyCalendar from '@/components/find/monthlyCalendar.vue'
-
+import moment from 'moment'
 export default {
   name: 'index',
   components: {
@@ -161,22 +137,19 @@ export default {
       }
       return dailyCost;
     },
+    dayOfTheWeek(){
+      let dayLength = this.costList.length;
+      let dayOfTheWeekChart = ['日', '一', '二', '三', '四', '五', '六'];
+      let dayOfTheWeek = [];
+      for(let d = 0; d < dayLength; d++){
+        let dayMoment = moment(this.nowYear + '-' + this.nowMonth + '-' + this.costList[d].date);
+        let dayIndex = dayMoment.weekday();
+        dayOfTheWeek.push(dayOfTheWeekChart[dayIndex])
+      }
+      return dayOfTheWeek;
+    }
   },
   methods: {
-    toggleCalendar(toggleDirection){
-      if(toggleDirection != undefined){
-        this.CalendarIsOpen = toggleDirection;
-      } else {
-        this.CalendarIsOpen = !this.CalendarIsOpen;
-      }
-      event.stopPropagation();
-    },
-    toggleYear(toggleDirection){
-      this.nowYear = this.nowYear + toggleDirection;
-    },
-    toggleMonth(selectMonth){
-      this.nowMonth = selectMonth;
-    },
     openNav(){
       this.$emit('openNav');
     },

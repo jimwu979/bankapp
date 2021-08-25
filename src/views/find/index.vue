@@ -16,12 +16,12 @@
       <div class="container">
         <div class="total board">
           <router-link class="totalType"
-            :to="{ path: '/record/addRecord', query: { year: nowYear, month: nowMonth, type: 'income'}}">
+            :to="{ path: '/statistics', query: { year: nowYear, month: nowMonth, isIncome: true}}">
             <span>收入</span>
             <span>{{ total.income }}</span>
           </router-link>
           <router-link class="totalType"
-            :to="{ path: '/record/addRecord', query: { year: nowYear, month: nowMonth, type: 'cost'}}">
+            :to="{ path: '/statistics', query: { year: nowYear, month: nowMonth, isIncome: false}}">
             <span>支出</span>
             <span>{{ total.cost }}</span>
           </router-link>

@@ -36,6 +36,7 @@
 
 <script>
 import monthlyCalendar from '@/components/find/monthlyCalendar.vue'
+import router from '@/router'
 
 export default {
   name: 'statistics',
@@ -56,12 +57,12 @@ export default {
       ],
       year: 2021,
       month: 8,
-      typeIsIncome: false,
+      isIncome: JSON.parse(this.$route.query.isIncome),
     }
   },
   computed: {
     IncomeOrCost(){
-      return this.typeIsIncome ? '收入' : '支出'
+      return this.isIncome ? '收入' : '支出';
     },
     totalCost(){
       let totalCost = 0;
@@ -80,9 +81,12 @@ export default {
       return costPercentage;
     },
   },
+  mounted() {
+  },
   methods: {
     back(){
-      window.history.go(-1);
+      // window.history.go(-1);
+      router.go(-1);
     },
   },
 }

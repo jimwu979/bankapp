@@ -1,6 +1,5 @@
 @import 'main.scss';
 .monthlyCalendar{
-    width: 60px;
     text-align: right;
     position: relative;
     padding: 0 20px 0 0;
@@ -17,7 +16,6 @@
         background-color: $lightbox_background;
     }
     span{
-        font-weight: 600;
         line-height: $header_height;
     }
     &:after{

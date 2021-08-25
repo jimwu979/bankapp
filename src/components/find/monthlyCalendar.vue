@@ -4,7 +4,7 @@
         v-clickStyle
         :class="{'mousedown': false, 'open': calendarIsOpen}">
     <div @click="toggleCalendar(false)" v-stopPropagation class="backgroundCover"></div>
-    <span>8月</span>
+    <span class="headerTitle">8月</span>
     <div class="calendar" @click.stop="toggleCalendar()">
       <div class="container">
         <div class="year">

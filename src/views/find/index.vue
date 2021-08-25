@@ -33,7 +33,7 @@
         <div class="day board" v-for="(day, day_index) in costList" :key="day_index">
           <div class="title">
             <div>{{nowMonth}}/{{costList[day_index]['date']}} 週{{dayOfTheWeek[day_index]}}</div>
-            <div>支出: <span>{{dailyCost[day_index]}}</span></div>
+            <div>收支: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
             <router-link class="cost_item" v-clickStyle

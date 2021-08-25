@@ -113,4 +113,91 @@ header{
     &.mousedown{
         background-color: $clicking_gray;
     }
+.icon{
+    border-radius: 50%; 
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgb(152, 221, 255);
+    &.color_0{
+        background-color: #E37C76;
+    }
+    &.color_1{
+        background-color: #E66F97;
+    }
+    &.color_2{
+        background-color: #6ABDDF;
+    }
+    &.color_3{
+        background-color: #6FC4AA;
+    }
+    &.color_4{
+        background-color: #94CE60;
+    }
+    &.color_5{
+        background-color: #F5BD62;
+    }
+    &.color_6{
+        background-color: #B883D3;
+    }
+    &.color_7{
+        background-color: #879BEA;
+    }
+    &.icon_0{
+        background-size: 100%;
+        background-image: url('../assets/classIcon/icon_0.png');
+    }
+    &.icon_1{
+        background-image: url('../assets/classIcon/icon_1.png');
+    }
+    &.icon_2{
+        background-image: url('../assets/classIcon/icon_2.png');
+    }
+    &.icon_3{
+        background-image: url('../assets/classIcon/icon_3.png');
+    }
+    &.icon_4{
+        background-size: 70%;
+        background-image: url('../assets/classIcon/icon_4.png');
+    }
+    &.icon_5{
+        background-size: 70%;
+        background-image: url('../assets/classIcon/icon_5.png');
+    }
+    &.icon_6{
+        background-size: 70%;
+        background-image: url('../assets/classIcon/icon_6.png');
+    }
+    &.icon_7{
+        background-size: 70%;
+        background-image: url('../assets/classIcon/icon_7.png');
+    }
+    &.icon_8{
+        background-size: 70%;
+        background-image: url('../assets/classIcon/icon_8.png');
+    }
+    &.icon_9{
+        background-image: url('../assets/classIcon/icon_9.png');
+    }
+    &.icon_10{
+        background-image: url('../assets/classIcon/icon_10.png');
+    }
+    &.icon_11{
+        background-image: url('../assets/classIcon/icon_11.png');
+    }
+    &.icon_12{
+        background-image: url('../assets/classIcon/icon_12.png');
+    }
+    &.icon_13{
+        background-image: url('../assets/classIcon/icon_13.png');
+    }
+    &.icon_14{
+        background-image: url('../assets/classIcon/icon_14.png');
+    }
+    &.icon_15{
+        background-image: url('../assets/classIcon/icon_15.png');
+    }
+    &.icon_16{
+        background-image: url('../assets/classIcon/icon_16.png');
+    }
 }

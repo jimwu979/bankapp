@@ -17,7 +17,19 @@
         <div class="board">
           <h2>{{ IncomeOrCost }}列表</h2>
           <div class="list">
-            <a href="#" v-for="(item, index) in costList">
+            <router-link 
+              v-for="(item, index) in costList"
+              :key="index"
+              v-clickStyle
+              :to="{
+                path: 'classDetail', 
+                query: { 
+                  year: nowYear, 
+                  month: nowMonth, 
+                  isIncome: this.$route.query.isIncome, 
+                  class: item.class
+                }
+              }">
               <div :class="['icon', 'color_' + item.color, 'icon_' + item.icon]"></div>
               <div class="information">
                 <div class="text">
@@ -26,7 +38,7 @@
                 </div>
                 <hr class="lineChart" :style="{width: calculatePercentage[index] + '%'}">
               </div>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
@@ -85,7 +97,6 @@ export default {
   },
   methods: {
     back(){
-      // window.history.go(-1);
       router.go(-1);
     },
   },

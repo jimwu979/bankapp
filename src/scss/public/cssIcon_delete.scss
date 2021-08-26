@@ -1,0 +1,32 @@
+@import '../main.scss';
+
+.cssIcon_delete{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2px;
+    .cover{
+        width: 16px;
+        height: 2px;
+        background-color: #999;
+        position: relative;
+        &:before{
+            top: -2px;
+            width: 8px;
+            height: 2px;
+            content: "";
+            position: absolute;
+            left: calc(50% - 4px);
+            display: inline-block;
+            background-color: #999;
+        }
+    }
+    .bucket{
+        margin-top: 1px;
+        width: 13px;
+        height: 14px;
+        border: 2px solid #999;
+        border-radius: 0 0 3px 3px;
+    }
+}

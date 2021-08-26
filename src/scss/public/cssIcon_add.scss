@@ -1,0 +1,17 @@
+@import '../main.scss';
+
+.cssIcon_add{
+    &:before, &:after{
+        width: 20px;
+        height: 2px;
+        content: '';
+        position: absolute;
+        top: calc(50% - 1px);
+        display: inline-block;
+        left: calc(50% - 10px);
+        background-color: #FFF;
+    }
+    &:before{
+        transform: rotateZ(90deg);
+    }
+}

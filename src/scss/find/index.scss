@@ -1,24 +1,10 @@
-@import 'main.scss';
+@import '../main.scss';
 
 body{
     .index{
         header{
             .container{
                 .left{
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
-                    justify-content: center;
-                    hr{
-                        width: 18px;
-                        height: 2px;
-                        border: none;
-                        display: inline-block;
-                        background-color: $icon_black;
-                        ~hr{
-                            margin-top: 4px;
-                        }
-                    }
                 }
                 .center{
                     font-weight: 600;
@@ -148,19 +134,6 @@ body{
             background-color: $main_color;
             right: calc(#{$screen_side} + 5px);
             box-shadow: 0px 4px 16px rgba(0,0,0,.2);
-            &:before, &:after{
-                width: 20px;
-                height: 2px;
-                content: '';
-                position: absolute;
-                top: calc(50% - 1px);
-                display: inline-block;
-                left: calc(50% - 10px);
-                background-color: #FFF;
-            }
-            &:before{
-                transform: rotateZ(90deg);
-            }
         }
     }
 }

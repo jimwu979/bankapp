@@ -3,9 +3,7 @@
     <header>
       <div class="container">
         <div class="left" v-clickStyle @click="openNav">
-          <hr>
-          <hr>
-          <hr>
+          <cssIcon_hamburger></cssIcon_hamburger>
         </div>
         <div class="center">
           <monthlyCalendar></monthlyCalendar>
@@ -49,16 +47,20 @@
         </div>
       </div>
     </main>
-    <router-link class="add_record" to="/record/addRecord"></router-link>
+    <router-link class="add_record" to="/record/addRecord">
+      <cssIcon_add></cssIcon_add>
+    </router-link>
   </div>
 </template>
 <script>
 import monthlyCalendar from '@/components/find/monthlyCalendar.vue'
+import cssIcon_hamburger from '@/components/public/cssIcon_hamburger.vue'
+import cssIcon_add from '@/components/public/cssIcon_add.vue'
 import moment from 'moment'
 export default {
   name: 'index',
   components: {
-    monthlyCalendar
+    monthlyCalendar, cssIcon_hamburger, cssIcon_add
   },
   data() {
     return {
@@ -156,4 +158,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/index.scss"></style>
+<style lang="scss" src="@/scss/find/index.scss"></style>

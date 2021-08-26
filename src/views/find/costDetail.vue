@@ -3,18 +3,13 @@
     <header>
       <div class="container">
         <div class="left" v-clickStyle @click="back">
-          <hr>
-          <hr>
-          <hr>
+          <cssIcon_arrowLeft></cssIcon_arrowLeft>
         </div>
         <div class="center">
           詳情
         </div>
         <div class="right" v-clickStyle @click="openLightbox">
-          <div class="cssIcon">
-            <div class="cover"></div>
-            <div class="bucket"></div>
-          </div>
+          <cssIcon_delete></cssIcon_delete>
         </div>
       </div>
     </header>
@@ -47,8 +42,7 @@
           </ul>
           <router-link :to="{path: 'addRecord'}">
             <div class="cssIcon">
-              <div class="pen"></div>
-              <div class="papper"></div>
+              <cssIcon_edit></cssIcon_edit>
             </div>
           </router-link>
         </div>
@@ -70,11 +64,14 @@
 <script>
 import router from '@/router'
 import moment from 'moment'
+import cssIcon_arrowLeft from '@/components/public/cssIcon_arrowLeft.vue'
+import cssIcon_delete from '@/components/public/cssIcon_delete.vue'
+import cssIcon_edit from '@/components/public/cssIcon_edit.vue'
 
 export default {
   name: 'costDetail',
   components: {
-    // board, header, nav
+    cssIcon_arrowLeft, cssIcon_delete, cssIcon_edit
   },
   data() {
     return {
@@ -114,4 +111,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/costDetail.scss"></style>
+<style lang="scss" src="@/scss/find/costDetail.scss"></style>

@@ -1,0 +1,18 @@
+@import '../main.scss';
+
+.cssIcon_hamburger{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    hr{
+        width: 18px;
+        height: 2px;
+        border: none;
+        display: inline-block;
+        background-color: $icon_black;
+        ~hr{
+            margin-top: 4px;
+        }
+    }
+}

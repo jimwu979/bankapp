@@ -3,9 +3,7 @@
     <header>
       <div class="container">
         <div class="left" v-clickStyle @click="back">
-          <hr>
-          <hr>
-          <hr>
+          <cssIcon_arrowLeft></cssIcon_arrowLeft>
         </div>
         <div class="center">
           <monthlyCalendar></monthlyCalendar>
@@ -48,12 +46,13 @@
 
 <script>
 import monthlyCalendar from '@/components/find/monthlyCalendar.vue'
+import cssIcon_arrowLeft from '@/components/public/cssIcon_arrowLeft.vue';
 import router from '@/router'
 
 export default {
   name: 'statistics',
   components: {
-    monthlyCalendar
+    monthlyCalendar, cssIcon_arrowLeft
   },
   data() {
     return {
@@ -102,4 +101,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/statistics.scss"></style>
+<style lang="scss" src="@/scss/find/statistics.scss"></style>

@@ -1,0 +1,45 @@
+@import '../main.scss';
+
+.cssIcon_edit{
+    .pen{
+        width: 4px;
+        height: 14px;
+        position: absolute;
+        top: calc(50% - 9px);
+        left: calc(50% - 4px);
+        background-color: #FFF;
+        transform: rotateZ(45deg);
+        &:before{
+            left: 0;
+            top: -5px;
+            width: 4px;
+            height: 4px;
+            content: '';
+            position: absolute;
+            display: inline-block;
+            background-color: #FFF;
+            border-radius: 1px 1px 0 0;
+        }
+        &:after{
+            left: 0;
+            width: 0;
+            height: 0;
+            content: '';
+            bottom: -3px;
+            position: absolute;
+            display: inline-block;
+            border-top:     3px solid #FFF;
+            border-left:    2px solid transparent;
+            border-right:   2px solid transparent;
+            border-bottom:  0px solid transparent;
+        }
+    }
+    .papper{
+        width: 22px;
+        height: 3px;
+        bottom: 14px;
+        position: absolute;
+        left: calc(50% - 11px);
+        background-color: rgba(255,255,255,.5);
+    }
+}

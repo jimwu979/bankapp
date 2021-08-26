@@ -105,4 +105,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/classDetail.scss"></style>
+<style lang="scss" src="@/scss/find/classDetail.scss"></style>

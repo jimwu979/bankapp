@@ -1,39 +1,12 @@
-@import 'main.scss';
+@import '../main.scss';
 
 body{
     .statistics{
         header{
             .container{
                 .left{
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    justify-content: center;
-                    hr{
-                        width: 18px;
-                        height: 2px;
-                        border: none;
-                        margin-left: 3px;
-                        border-radius: 1px;
-                        display: inline-block;
-                        background-color: $icon_black;
-                        ~hr{
-                            margin-top: -2px;
-                        }
-                        &:nth-of-type(odd){
-                            width: 11px;
-                            transform-origin: left center;
-                        }
-                        &:nth-of-type(1){
-                            transform: rotateZ(40deg);
-                        }
-                        &:nth-of-type(3){
-                            transform: rotateZ(-40deg);
-                        }
-                    }
                 }
                 .center{
-
                 }
             }
         }

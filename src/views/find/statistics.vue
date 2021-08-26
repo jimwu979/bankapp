@@ -2,7 +2,7 @@
   <div class="statistics">
     <header>
       <div class="container">
-        <div class="left" @click="back">
+        <div class="left" v-clickStyle @click="back">
           <hr>
           <hr>
           <hr>

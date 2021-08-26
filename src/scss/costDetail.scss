@@ -1,0 +1,242 @@
+@import 'main.scss';
+
+body{
+    .costDetail{
+        header{
+            .container{
+                .left{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    justify-content: center;
+                    hr{
+                        width: 18px;
+                        height: 2px;
+                        border: none;
+                        margin-left: 3px;
+                        border-radius: 1px;
+                        display: inline-block;
+                        background-color: $icon_black;
+                        ~hr{
+                            margin-top: -2px;
+                        }
+                        &:nth-of-type(odd){
+                            width: 11px;
+                            transform-origin: left center;
+                        }
+                        &:nth-of-type(1){
+                            transform: rotateZ(40deg);
+                        }
+                        &:nth-of-type(3){
+                            transform: rotateZ(-40deg);
+                        }
+                    }
+                }
+                .center{
+                    font-weight: 400;
+                }
+                .right{
+                    .cssIcon{
+                        width: 100%;
+                        height: 100%;
+                        position: relative;
+                        .cover{
+                            position: absolute;
+                            top: 13px;
+                            width: 15px;
+                            height: 2px;
+                            background-color: #999;
+                            left: calc(50% - 8px);
+                            &:before{
+                                top: -1px;
+                                width: 7px;
+                                height: 2px;
+                                content: "";
+                                position: absolute;
+                                left: calc(50% - 4px);
+                                display: inline-block;
+                                background-color: #999;
+                            }
+                        }
+                        .bucket{    
+                            width: 13px;
+                            height: 18px;
+                            position: absolute;
+                            top: calc(50% - 7px);
+                            left: calc(50% - 7px);
+                            border: 2px solid #999;
+                            border-radius: 0 0 3px 3px;
+                        }
+                    }
+                }
+            }
+        }
+        main{
+            .container{
+                .board{
+                    $iconWidth: 32px;
+                    position: relative;
+                    padding: $screen_side;
+                    .title{
+                        width: 100%;
+                        display: flex;
+                        padding: 30px 0;
+                        height: $iconWidth;
+                        align-items: center;
+                        flex-direction: row;
+                        line-height: $iconWidth;
+                        justify-content: center;
+                        .iconBox{
+                            width: 36px;
+                            .icon{
+                                width: $iconWidth;
+                                height: $iconWidth;
+                            }
+                        }
+                        h2{
+                            flex: 1;
+                            font-size: 20px;
+                            padding-left: 30px;
+                        }
+                    }
+                    ul{
+                        padding-top: 15px;
+                        padding-bottom: 30px;
+                        border-top: 1px solid #EEE;
+                        li{
+                            display: flex;
+                            flex-direction: row;
+                            align-items: flex-start;
+                            justify-content: flex-start;
+                            +li{
+                                padding-top: 15px;
+                            }
+                            span{
+                                line-height: inherit;
+                                display: inline-block;
+                                &:nth-of-type(1){
+                                    width: 36px;
+                                    color: $icon_black; 
+                                }
+                                &:nth-of-type(2){
+                                    flex: 1;
+                                    padding-left: 30px;
+                                }
+                            }
+                        }
+                    }
+                    a{
+                        right: 15px;
+                        width: 50px;
+                        height: 50px;
+                        bottom: -25px;
+                        position: absolute;
+                        border-radius: 50%;
+                        display: inline-block;
+                        background-color: $main_color;
+                        .cssIcon{
+                            width: 100%;
+                            height: 100%;
+                            position: relative;
+                            .pen{
+                                width: 4px;
+                                height: 14px;
+                                position: absolute;
+                                top: calc(50% - 9px);
+                                left: calc(50% - 4px);
+                                background-color: #FFF;
+                                transform: rotateZ(45deg);
+                                &:before{
+                                    left: 0;
+                                    top: -5px;
+                                    width: 4px;
+                                    height: 4px;
+                                    content: '';
+                                    position: absolute;
+                                    display: inline-block;
+                                    background-color: #FFF;
+                                    border-radius: 1px 1px 0 0;
+                                }
+                                &:after{
+                                    left: 0;
+                                    width: 0;
+                                    height: 0;
+                                    content: '';
+                                    bottom: -3px;
+                                    position: absolute;
+                                    display: inline-block;
+                                    border-top:     3px solid #FFF;
+                                    border-left:    2px solid transparent;
+                                    border-right:   2px solid transparent;
+                                    border-bottom:  0px solid transparent;
+                                }
+                            }
+                            .papper{
+                                width: 22px;
+                                height: 3px;
+                                bottom: 14px;
+                                position: absolute;
+                                left: calc(50% - 11px);
+                                background-color: rgba(255,255,255,.5);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .fixbox{
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: fixed;
+            transition: .3s;
+            align-items: center;
+            flex-direction: row;
+            pointer-events: none;
+            justify-content: center;
+            background-color: rgba(0,0,0,.6);
+            .lightbox{
+                height: 160px;
+                display: flex;
+                max-width: 600px;
+                position: relative;
+                border-radius: 2px;
+                flex-direction: column;
+                align-items: flex-start;
+                background-color: #FFF;
+                justify-content: flex-start;
+                padding: calc(#{$screen_side} * 2);
+                box-shadow: 0 4px 12px rgba(0,0,0,.2);
+                width: calc(100% - (#{$screen_side} * 4));
+                h3{
+                    font-size: 18px;
+                }
+                p{
+                    padding-top: 10px;
+                }
+                >div{
+                    right: 0px;
+                    bottom: 0px;
+                    display: flex;
+                    position: absolute;
+                    align-items: center;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    .btn{
+                        width: 60px;
+                        height: 40px;
+                        text-align: center;
+                        color: $text_yellow;
+                    }
+                }
+            }
+            &.open{
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+    }
+}

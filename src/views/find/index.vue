@@ -37,7 +37,7 @@
             <router-link class="cost_item" v-clickStyle
               v-for="(items, i_index) in costList[day_index]['items']"
               :key="i_index"
-              :to="{ path: '/record/addRecord', query: { year: nowYear, month: nowMonth, day: day.date}}"
+              :to="{ path: 'costDetail', query: { year: nowYear, month: nowMonth, day: day.date}}"
             >
               <div :class="['icon', 'color_' + i_index, 'icon_' + i_index]"></div>
               <div class="class">{{items.class}}<span>{{items.description}}</span></div>

@@ -1,8 +1,9 @@
 // varibale
 $main_color: #F9DB61;
+$text_yellow: #FAC64C;
 $text_black: #333;
 $icon_black: #999;
-$clicking_gray: #EEE;
+$clicking_gray: #F9F9F9;
 $background_blue: #fafeff;
 $screen_side: 10px;
 $header_height: 45px;
@@ -91,6 +92,8 @@ header{
         .center{
             flex: 1;
             display: flex;
+            font-size: 16px;
+            font-weight: 600;
             align-items: center;
             flex-direction: row;
             justify-content: flex-start;

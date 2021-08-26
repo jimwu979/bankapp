@@ -142,7 +142,7 @@ export default {
       let dayOfTheWeekChart = ['日', '一', '二', '三', '四', '五', '六'];
       let dayOfTheWeek = [];
       for(let d = 0; d < dayLength; d++){
-        let dayMoment = moment(this.nowYear + '-' + this.nowMonth + '-' + this.costList[d].date);
+        let dayMoment = moment(this.nowYear + '/' + this.nowMonth + '/' + this.costList[d].date);
         let dayIndex = dayMoment.weekday();
         dayOfTheWeek.push(dayOfTheWeekChart[dayIndex])
       }

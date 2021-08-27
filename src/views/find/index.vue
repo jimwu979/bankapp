@@ -47,7 +47,7 @@
         </div>
       </div>
     </main>
-    <router-link class="add_record" to="/record/addRecord">
+    <router-link class="add_record" to="/addRecord">
       <cssIcon_add></cssIcon_add>
     </router-link>
   </div>

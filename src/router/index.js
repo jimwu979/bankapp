@@ -7,7 +7,7 @@ const router = createRouter({
     { path: '/',              name: 'index',        component: () => import('../views/find/index.vue') },
     { path: '/statistics',    name: 'statistics',   component: () => import('../views/find/statistics.vue') },
     { path: '/classDetail',   name: 'classDetail',  component: () => import('../views/find/classDetail.vue') },
-    { path: '/costDetail',    name: 'costDetail',   component: () => import('../views/find/costDetail.vue') },
+    { path: '/recordDetail',  name: 'recordDetail', component: () => import('../views/find/recordDetail.vue') },
 
     // record
     { path: '/addRecord',     name: 'addRecord',    component: () => import('../views/record/addRecord.vue') },

@@ -1,5 +1,5 @@
 <template>
-  <div class="costDetail">
+  <div class="recordDetail">
     <header>
       <div class="container">
         <div class="left" v-clickStyle @click="back">
@@ -69,7 +69,7 @@ import cssIcon_delete from '@/components/public/cssIcon_delete.vue'
 import cssIcon_edit from '@/components/public/cssIcon_edit.vue'
 
 export default {
-  name: 'costDetail',
+  name: 'recordDetail',
   components: {
     cssIcon_arrowLeft, cssIcon_delete, cssIcon_edit
   },
@@ -111,4 +111,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/find/costDetail.scss"></style>
+<style lang="scss" src="@/scss/find/recordDetail.scss"></style>

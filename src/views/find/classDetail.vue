@@ -19,7 +19,7 @@
           <div class="list">
             <router-link
               :to="{
-                path: 'costDetail', 
+                path: 'record', 
                 query: {
                   year: nowYear,
                   month: nowMonth,

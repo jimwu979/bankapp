@@ -1,15 +1,27 @@
-// varibale
+// config
 $main_color: #F9DB61;
 $text_yellow: #FAC64C;
 $text_black: #333;
 $icon_black: #999;
-$clicking_gray: #F9F9F9;
+$clicking_gray: #F3F3F3;
 $background_blue: #fafeff;
 $screen_side: 10px;
 $header_height: 45px;
 $board_border: 1px solid #eee;
-$board_shadow: 0 1px 3px rgba(0,0,0,.1);
+$board_shadow: 0 1px 3px rgba(27, 14, 14, 0.1);
 $lightbox_background: rgba(0,0,0,.5);
+
+@mixin flexbox($direction, $justify-content, $align-items) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+.t{
+    box-shadow: 0px 0px 3px #F33 inset;
+}
+
 
 // reset
 *{
@@ -23,7 +35,8 @@ $lightbox_background: rgba(0,0,0,.5);
     border-radius: 0;
     line-height: 22px;
     border-spacing: 0;
-    letter-spacing: 0;
+    // letter-spacing: 0;
+    letter-spacing: 1px;
     color: $text_black;
     box-sizing: border-box;
     background-size: cover;
@@ -100,7 +113,10 @@ header{
             .headerTitle, &.headerTitle{
                 min-width: 60px;
                 font-size: 16px;
+                height: $header_height;
+                line-height: $header_height;
                 font-weight: 600;
+                padding-left: $screen_side;
             }
         }
     }
@@ -133,6 +149,7 @@ main{
     position: relative;
 }
 .icon{
+    overflow: hidden;
     border-radius: 50%; 
     background-size: 50%;
     background-position: center;

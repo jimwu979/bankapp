@@ -48,7 +48,6 @@ app.directive('clickStyle', {
         el.addEventListener('click', ()=>{
             event.stopPropagation();
         });
-        event.stopPropagation();
     },
     // beforeUnmount(el){ },
     // umounted(el){ }

@@ -79,43 +79,16 @@
         </div>
       </div>
     </main>
-    <div class="fixbox" :class="{'open': calendar.isOpen}">
-      <div class="lightbox">
-        <div class="title">
-          <span>{{ today.year }}年</span>
-          <h2>{{today.month}}月{{today.day}}日 週{{ ['日', '一', '二', '三', '四', '五', '六'][today.dayOfTheWeek] }}</h2>
-        </div>
-        <div class="content">
-          <div class="selectMonth">
-            <span @click="selectMonth(-1)"></span>
-            <div>{{ calendar.year }}年{{ calendar.month }}月</div>
-            <span @click="selectMonth(1)"></span>
-          </div>
-          <div class="selectDay">
-            <ol>
-              <li v-for="d in ['日', '一', '二', '三', '四', '五', '六']">{{ d }}</li>
-            </ol>
-            <ol>
-              <li v-for="(n, index) in calendar.firstDayOfTheWeek" :key="n"></li>
-              <li v-for="(d, index) in calendar.NumberOfDays     " :key="d" 
-                  :class="{'select': (index + 1 == calendar.selectDay.day) && 
-                                     (calendar.year == calendar.selectDay.year) && 
-                                     (calendar.month == calendar.selectDay.month)}"
-                  @click="selectDay(d)">{{ d }}</li>
-            </ol>
-          </div>
-          <div class="action">
-            <div @click="toggleCalendar(false)">取消</div>
-            <div @click="checkedDate(false)">確定</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <calendar 
+      v-if="mounted" 
+      @cancelSelect="cancelSelect"
+      @checkedDate="checkedDate"
+      :dateInformation="form.date" 
+      :isOpenFromParent="calendarIsOpen"></calendar>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
 import router from '@/router'
 import calendar from '@/components/record/calendar.vue'
 import classBtn from '@/components/record/classBtn.vue'
@@ -171,34 +144,13 @@ export default {
           }
         }
       },
-      calendar: {
-        isOpen: false,
-        year: 2021,
-        month: 8,
-        day: 31,
-        NumberOfDays: 0,
-        firstDayOfTheWeek: 0,
-        selectDay: {
-          year: 2021,
-          month: 8,
-          day: 31
-        }
-      }
+      mounted: false,
+      calendarIsOpen: false
     }
   },
   mounted() {
     this.form.date = this.today;
-    this.initCalendar();
-    // let formY = this.form.date.year;
-    // let formM = this.form.date.month;
-    // this.calendar.NumberOfDays = new Date(formY, formM, 0).getDate();
-    // this.calendar.firstDayOfTheWeek = new Date(formY + "/"+ formM +"/1").getDay();
-    // this.calendar.year = this.form.date.year;
-    // this.calendar.month = this.form.date.month;
-    // this.calendar.day = this.form.date.day;
-    // this.calendar.selectDay.year = this.form.date.year;
-    // this.calendar.selectDay.month = this.form.date.month;
-    // this.calendar.selectDay.day = this.form.date.day;
+    this.mounted = true;
   },
   computed: {
     today(){
@@ -213,54 +165,19 @@ export default {
   },
   methods: {
     //calendar
-    initCalendar(){
-      let formY = this.form.date.year;
-      let formM = this.form.date.month;
-      this.calendar.NumberOfDays = new Date(formY, formM, 0).getDate();
-      this.calendar.firstDayOfTheWeek = new Date(formY + "/"+ formM +"/1").getDay();
-      this.calendar.year = this.form.date.year;
-      this.calendar.month = this.form.date.month;
-      this.calendar.day = this.form.date.day;
-      this.calendar.selectDay.year = this.form.date.year;
-      this.calendar.selectDay.month = this.form.date.month;
-      this.calendar.selectDay.day = this.form.date.day;
-    },
     toggleCalendar(toggleDirection){
       if(toggleDirection !== undefined){
-        this.calendar.isOpen = toggleDirection;
+        this.calendarIsOpen = toggleDirection;
       } else {
-        this.calendar.isOpen = !this.calendar.isOpen;
-      }
-      if(this.calendar.isOpen) this.initCalendar();
-    },
-    selectDay(day){
-      this.calendar.selectDay = {
-        year: this.calendar.year,
-        month: this.calendar.month,
-        day: day
+        this.calendarIsOpen = !this.calendarIsOpen;
       }
     },
-    selectMonth(selectDirection){
-      this.calendar.month += selectDirection;
-      if(this.calendar.month >= 13){
-        this.calendar.month = 1;
-        this.calendar.year++;
-      } 
-      else if (this.calendar.month <= 0){
-        this.calendar.month = 12;
-        this.calendar.year--;
-      }
-      this.calendar.NumberOfDays = new Date(this.calendar.year, this.calendar.month, 0).getDate();
-      this.calendar.firstDayOfTheWeek = new Date(this.calendar.year + "/"+ this.calendar.month +"/1").getDay();
-      this.calendar.day = 0;
+    cancelSelect(){
+      this.calendarIsOpen = false;
     },
-    checkedDate(){
-      this.form.date = {
-        year: this.calendar.selectDay.year,
-        month: this.calendar.selectDay.month,
-        day: this.calendar.selectDay.day
-      }
-      this.toggleCalendar(false);
+    checkedDate(selectDate){
+      this.calendarIsOpen = false;
+      this.form.date = selectDate;
     },
 
     // calculate

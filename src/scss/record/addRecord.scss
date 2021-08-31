@@ -1,0 +1,468 @@
+@import '../main.scss';
+
+.addRecord{
+    header{
+        .container{
+            .left{
+
+            }
+            .center{
+                .typeSelector{
+                    position: relative;
+                    .headerTitle{
+                        &:after{
+                            width: 0;
+                            height: 0;
+                            right: 0px;
+                            content: '';
+                            transition: .2s;
+                            position: absolute;
+                            top: calc(50% - 2px);
+                            display: inline-block;
+                            transform-origin: center 1px;
+                            border-top: 4px solid $icon_black;
+                            border-left: 4px solid transparent;
+                            border-right: 4px solid transparent;
+                            border-bottom: 0px solid transparent;
+                        }
+                    }
+                    ul{
+                        left: 0;
+                        top: 40px;
+                        opacity: 0;
+                        width: 160px;
+                        transition: .2s;
+                        position: absolute;
+                        border-radius: 2px;
+                        pointer-events: none;
+                        background-color: #FFF;
+                        box-shadow: 0px 2px 4px rgba(0,0,0,.3);
+                        li{
+                            font-size: 16px;
+                            font-weight: 400;
+                            padding: 15px 20px;
+                            &.now{
+                                background-color: #F6F6F6;
+                            }
+                        }
+                    }
+                    &.open{
+                        .headerTitle{
+                            &:after{
+                                transform: rotateZ(180deg);
+                            }
+                        }
+                        ul{
+                            opacity: 1;
+                            pointer-events: auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    main{
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-color: #FFF;
+        padding-top: $header_height;
+        .container{
+            .classSelector{
+                flex-wrap: wrap;
+                @include flexbox(row, flex-start, flex-start);
+                li{
+                    width: 25%;
+                    height: 100px;
+                    @include flexbox(column, center, center);
+                    div{
+                        width: 40px;
+                        height: 40px;
+                    }
+                    span{
+                        font-size: 12px;
+                        padding-top: 5px;
+                    }
+                    &:nth-last-of-type(1){
+                        a{
+                            display: inline-block;
+                            width: 100%;
+                            height: 100%;
+                            @include flexbox(column, center, center);
+                            div{
+                                color: #999;
+                                font-size: 30px;
+                                line-height: 40px;
+                                text-align: center;
+                                border-radius: 50%;
+                                border: 1px dashed #999;
+                            }
+                        }
+                    }
+                    &.gray{
+                        div{
+                            opacity: .7;
+                            filter: invert(100%);
+                            background-color: #161616;
+                        }
+                        span{
+
+                        }
+                    }
+                }
+            }
+            .form{
+                $table_border: 1px solid #DDD;
+                left: 0;
+                bottom: 0;
+                z-index: 1;
+                opacity: 0;
+                width: 100%;
+                height: 300px;
+                position: fixed;
+                pointer-events: none;
+                background-color: #FFF;
+                border-top: $table_border;
+                transition: opacity .2s, bottom 0s;
+                @include flexbox(column, flex-start, flex-start);
+                &.enterDescription{
+                    bottom: -239px;
+                }
+                .input{
+                    width: 100%;
+                    height: 60px;
+                    border-bottom: $table_border;
+                    @include flexbox(row, center, center);
+                    input.description{
+                        flex: 1;
+                        min-width: 90px;
+                        text-align: left;
+                        line-height: 60px;
+                        padding: 0 0 0 $screen_side;
+                        &::placeholder{
+                            color: $icon_black;
+                        }
+                    }
+                    .calculate{
+                        height: 100%;
+                        text-align: right;
+                        padding: 0 $screen_side;
+                        max-width: calc(100% - 90px);
+                        @include flexbox(row, flex-end, center);
+                        >div{
+                            font-size: 28px;
+                            font-weight: 400;
+                            &.before{
+    
+                            }
+                            &.calculateSmybol{
+                                
+                            }
+                            &.after{
+    
+                            }
+                        }
+                    }
+                }
+                .keyboard{
+                    width: 100%;
+                    height: calc(100% - 60px);
+                    @include flexbox(row, center, center);
+                    .number{
+                        flex: 1;
+                        height: 100%;
+                        flex-wrap: wrap;
+                        @include flexbox(row, flex-start, flex-start);
+                        li{
+                            height: 25%;
+                            font-size: 24px;
+                            font-weight: 400;
+                            text-align: center;
+                            width: calc(100% / 3);
+                            display: inline-block;
+                            @include flexbox(row, center, center);
+                            ~li{
+
+                            }
+                            &.decimalPoint{
+
+                            }
+                            &.delete{
+                                font-size: 20px;
+                            }
+                            &:nth-of-type(2){
+                                order: 1;
+                            }
+                            &:nth-of-type(3){
+                                order: 2;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(4){
+                                order: 3;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(5){
+                                order: 4;
+                                border-top: $table_border;
+                            }
+                            &:nth-of-type(6){
+                                order: 5;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(7){
+                                order: 6;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(8){
+                                order: 7;
+                                border-top: $table_border;
+                            }
+                            &:nth-of-type(9){
+                                order: 8;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(10){
+                                order: 9;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(11){
+                                order: 10;
+                                border-top: $table_border;
+                            }
+                            &:nth-of-type(1){
+                                order: 11;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                            &:nth-of-type(12){
+                                order: 12;
+                                border-top: $table_border;
+                                border-left: $table_border;
+                            }
+                        }
+                    }
+                    >div{
+                        width: 90px;
+                        height: 100%;
+                        border-left: $table_border;
+                        >div{
+                            height: 25%;
+                            @include flexbox(column, center, center);
+                            ~div{
+                                border-top: $table_border;
+                            }
+                            &.calendarBtn{
+                                span{
+                                    &:nth-of-type(1){
+                                        
+                                    }
+                                    &:nth-of-type(2){
+                                        
+                                    }
+                                }
+                            }
+                            &.add{
+                                font-size: 30px;
+                            }
+                            &.subtract{
+                                span{
+                                    font-size: 30px;
+                                    transform: scaleX(1.9);
+                                }
+                            }
+                            &.submit{
+                                background-color: $main_color;
+                                >div{
+                                    width: 100%;
+                                    height: 100%;
+                                    @include flexbox(row, center, center);
+                                    &.cssIcon{
+                                        div{
+                                            width: 30px;
+                                            height: 30px;
+                                            position: relative;
+                                            border-radius: 50%;
+                                            border: 2px solid #333;
+                                            transform: scale(.7) rotateZ(-44deg);
+                                            &:before, &:after{
+                                                content: '';
+                                                position: absolute;
+                                                border-radius: 1px;
+                                                display: inline-block;
+                                                background-color: #333;
+                                            }
+                                            &:before{
+                                                top: 6px;
+                                                left: 6px;
+                                                width: 2px;
+                                                height: 10px;
+                                            }
+                                            &:after{
+                                                top: 14px;
+                                                left: 7px;
+                                                width: 16px;
+                                                height: 2px;
+                                            }
+                                        }
+                                    }
+                                    &.calculate{
+                                        font-size: 30px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                &.open{
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+            }
+        }
+    }
+    .fixbox{
+        top: 0;
+        left: 0;
+        z-index: 1;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        transition: .2s;
+        pointer-events: none;
+        @include flexbox(row, center, center);
+        background-color: $lightbox_background;
+        .lightbox{
+            $padding: 15px;
+            width: 300px;
+            height: 500px;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #FFF;
+            box-shadow: 0px 4px 12px rgba(0,0,0,.1);
+            @include flexbox(column, center, center);
+            .title{
+                width: 100%;
+                padding: $padding;
+                background-color: $text_yellow;
+                span{
+                    color: #FFF;
+                    font-weight: 400;
+                }
+                h2{
+                    color: #FFF;
+                    font-size: 32px;
+                    font-weight: 600;
+                    padding-top: 5px;
+                    line-height: 32px;
+                }
+            }
+            .content{
+                flex: 1;
+                position: relative;
+                padding: $padding;
+                .selectMonth{
+                    height: 40px;
+                    @include flexbox(row, space-between, center);
+                    span{
+                        flex: 1;
+                        height: 100%;
+                        padding: 10px;
+                        cursor: pointer;
+                        @include flexbox(column, center, center);
+                        &:before, &:after{
+                            width: 9px;
+                            height: 2px;
+                            content: '';
+                            border-radius: 1px;
+                            display: inline-block;
+                            background-color: $text_black;
+                        }
+                        &:after{
+                            margin-top: 3px;
+                        }
+                        $rotateDeg: 45;
+                        &:nth-of-type(1){
+                            align-items: start;
+                            &:before{
+                                transform: rotateZ(-#{$rotateDeg}deg);
+                            }
+                            &:after{
+                                transform: rotateZ(#{$rotateDeg}deg);
+                            }
+                        }
+                        &:nth-of-type(2){
+                            align-items: flex-end;
+                            &:before{
+                                transform: rotateZ(#{$rotateDeg}deg);
+                            }
+                            &:after{
+                                transform: rotateZ(-#{$rotateDeg}deg);
+                            }
+                        }
+                    }
+                    div{
+                        height: 100%;
+                        font-weight: 600;
+                        @include flexbox(row, center, center);
+                    }
+                }
+                .selectDay{
+                    padding-top: 10px;
+                    ol{
+                        flex-wrap: wrap;
+                        @include flexbox(row, flex-start, center);
+                        li{
+                            height: 39px;
+                            font-weight: 400;
+                            width: calc(100% / 7);
+                            @include flexbox(row, center, center);
+                        }
+                        &:nth-of-type(1){
+                            li{
+                                color: $icon_black;
+                            }
+                        }
+                        &:nth-of-type(2){
+                            li{
+                                cursor: pointer;
+                                border-radius: 50%;
+                                &.select{
+                                    color: #FFF;
+                                    background-color: $text_yellow;
+                                }
+                            }
+                        }
+                    }
+                }
+                .action{
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    @include flexbox(row, flex-end, center);
+                    div{
+                        cursor: pointer;
+                        font-weight: 400;
+                        padding: 15px 25px;
+                        color: $text_yellow;
+                        &:nth-of-type(1){
+                            
+                        }
+                        &:nth-of-type(2){
+                        }
+                    }
+                }
+            }
+        }
+        &.open{
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}

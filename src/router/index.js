@@ -16,6 +16,7 @@ const router = createRouter({
     { path: '/account',       name: 'account',      component: () => import('../views/set/account.vue') },
     { path: '/addClass',      name: 'addClass',     component: () => import('../views/set/addClass.vue') },
     { path: '/login',         name: 'login',        component: () => import('../views/set/login.vue') },
+    { path: '/signUp',        name: 'signUp',       component: () => import('../views/set/signUp.vue') },
     { path: '/settingClass',  name: 'settingClass', component: () => import('../views/set/settingClass.vue') },
   ]
 })

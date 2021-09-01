@@ -1,0 +1,61 @@
+@import '../main.scss';
+
+.signUp{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    padding-top: 45px;
+    background-color: $main_color;
+    @include flexbox(row, center, center);
+    .container{
+        @include flexbox(column, flex-start, flex-start);
+        h2{
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .board{
+            width: 100%;
+            margin-top: 15px;
+            border: 2px solid $text_black;
+            padding: 30px $screen_side;
+            @include flexbox(column, flex-start, flex-start);
+            label{
+                font-size: 16px;
+                font-weight: 400;
+            }
+            input{
+                border-bottom: 2px solid $text_black;
+                ~label{
+                    padding-top: 30px;
+                }
+                &.email{
+                    width: 260px;
+                }
+            }
+            p{
+                opacity: 0;
+                transition: .2s;
+                color: #d44950;
+                margin-top: -2px;
+                font-weight: 600;
+                pointer-events: none;
+                &.show{
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+            }
+        }
+        a{
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            padding: 10px 20px;
+            align-self: center;
+            border-radius: 3px;
+            background-color: #FFF;
+            border: 2px solid $text_black;
+        }
+    }
+}

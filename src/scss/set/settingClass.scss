@@ -62,9 +62,9 @@
                         width: 50%;
                         height: 100%;
                         overflow: auto;
-                            &::-webkit-scrollbar{
-                                display: none;
-                            }
+                        &::-webkit-scrollbar{
+                            display: none;
+                        }
                         ol{
                             width: 100%;
                             position: relative;

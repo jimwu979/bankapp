@@ -1,0 +1,231 @@
+@import '../main.scss';
+
+html{
+    height: 100%;
+    body{
+        height: 100%;
+        background-color: #FFF;
+        #app{
+            padding-bottom: 0;
+            .addClass{
+                height: 100%;
+                header{
+
+                }
+                main{
+                    height: 100%;
+                    .container{
+                        height: 100%;
+                        @include flexbox(column, flex-start, flex-start);
+                        .newClass{
+                            width: 100%;
+                            height: 50px;
+                            @include flexbox(row, center, center);
+                            .icon{
+                                width: 40px;
+                                height: 40px;
+                            }
+                            input{
+                                flex: 1;
+                                line-height: 30px;
+                                margin-left: 15px;
+                                border-bottom: 1px solid $main_color;
+                            }
+                            .type{
+                                width: 70px;
+                                line-height: 40px;
+                                margin-left: 15px;
+                                text-align: right;
+                                position: relative;
+                                border-radius: 6px;
+                                padding-right: 24px;
+                                &:after{
+                                    top: 18px;
+                                    right: 8px;
+                                    content: '';
+                                    transition: .2s;
+                                    position: absolute;
+                                    display: inline-block;
+                                    border-top: 6px solid $text_black;
+                                    border-left: 4px solid transparent;
+                                    border-right: 4px solid transparent;
+                                    border-bottom: 0px solid transparent;
+                                }
+                                span{
+                                    
+                                }
+                                ul{
+                                    right: 0;
+                                    top: 40px;
+                                    opacity: 0;
+                                    z-index: 1;
+                                    width: 100%;
+                                    transition: .2s;
+                                    position: absolute;
+                                    border-radius: 3px;
+                                    pointer-events: none;
+                                    background-color: #fff;
+                                    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+                                    li{
+                                        text-align: center;
+                                        padding: 10px 15px;
+                                        &.now{
+                                            font-weight: 600;
+                                            color: $text_yellow;
+                                        }
+                                    }
+                                }
+                                &.open{
+                                    &:after{
+                                        transform: rotateZ(180deg);
+                                    }
+                                    ul{
+                                        opacity: 1;
+                                        pointer-events: auto;
+                                    }
+                                }
+                            }
+                        }
+                        .setIcon{
+                            flex: 1;
+                            width: 100%;
+                            overflow: auto;
+                            &::-webkit-scrollbar{
+                                display: none;
+                            }
+                            >div{
+                                padding-top: 24px;
+                                h2{
+                                    font-size: 18px;
+                                }
+                                ul{
+                                    width: 100%;
+                                    flex-wrap: wrap;
+                                    @include flexbox(row, flex-start, flex-start);
+                                    li{
+                                        width: 25%;
+                                        height: 80px;
+                                        position: relative;
+                                        @include flexbox(row, center, center);
+                                        div{
+                                            width: 40px;
+                                            height: 40px;
+                                        }
+                                        span{
+                                            opacity: 0;
+                                            $size: 26px;
+                                            width: $size;
+                                            height: $size;
+                                            transition: .2s;
+                                            position: absolute;
+                                            border-radius: 50%;
+                                            display: inline-block;
+                                            border: 2px solid $text_black;
+                                            background-color: $main_color;
+                                            top: calc(50% - #{$size/2 - 16px});
+                                            left: calc(50% - #{$size/2 - 16px});
+                                            transform: rotateZ(-45deg) scale(.5);
+                                            &:before, &:after{
+                                                content: '';
+                                                position: absolute;
+                                                border-radius: 1px;
+                                                display: inline-block;
+                                                background-color: $text_black;
+                                            }
+                                            &:before{
+                                                top: 6px;
+                                                left: 5px;
+                                                width: 2px;
+                                                height: 7px;
+                                            }
+                                            &:after{
+                                                top: 13px;
+                                                left: 5px;
+                                                width: 14px;
+                                                height: 2px;
+                                            }
+                                        }
+                                        &.now{
+                                            span{
+                                                opacity: 1;
+                                                transform: rotateZ(-45deg) scale(1);
+                                            }
+                                        }
+                                    }
+                                }
+                                &:nth-of-type(1){
+                                    ul{
+                                        li{
+                                            div{
+                                                opacity: .7;
+                                                filter: invert(100%);
+                                                background-color: #161616;
+                                            }
+                                        }
+                                    }
+                                }
+                                &:nth-of-type(2){
+                                    
+                                }
+                            }
+                        }
+                        .submit{
+                            height: 50px;
+                            margin-left: -$screen_side;
+                            border-top: 1px solid #eee;
+                            @include flexbox(row, center, center);
+                            width: calc(100% + #{$screen_side * 2});
+                        }
+                    }
+                }
+                .fixbox{
+                    top: 0;
+                    left: 0;
+                    z-index: 1;
+                    opacity: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    position: fixed;
+                    transition: .3s;
+                    align-items: center;
+                    flex-direction: row;
+                    pointer-events: none;
+                    justify-content: center;
+                    background-color: rgba(0,0,0,.6);
+                    .lightbox{
+                        width: 300px;
+                        height: 160px;
+                        display: flex;
+                        position: relative;
+                        border-radius: 2px;
+                        background-color: #FFF;
+                        padding: #{$screen_side * 2};
+                        @include flexbox(row, center, center);
+                        box-shadow: 0 4px 12px rgba(0,0,0,.2);
+                        max-width: calc(100% - #{$screen_side * 2});
+                        p{
+                            width: 100%;
+                            font-size: 16px;
+                            @include flexbox(row, center, center);
+                        }
+                        >div{
+                            right: 15px;
+                            width: 60px;
+                            bottom: 15px;
+                            height: 40px;
+                            font-weight: 600;
+                            position: absolute;
+                            color: $text_yellow;
+                            @include flexbox(row, center, center);
+                        }
+                    }
+                    &.open{
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+                }
+            }
+        }
+    }
+}

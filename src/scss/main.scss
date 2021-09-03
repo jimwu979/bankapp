@@ -50,6 +50,11 @@ a:link, a:visited, a:hover, a:active{
     color: $text_black;
     text-decoration: none;
 }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    box-shadow:0 0 0 60px #FFF inset;
+}
 
 html{
 	width: 100%;

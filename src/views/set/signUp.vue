@@ -55,9 +55,28 @@ export default {
             this.email.done = this.email.val.length > 0 && this.email.val.indexOf('@') != -1 ? true : false;
             this.password.done = this.password.val.length > 0 ? true : false;
             this.checkPassword.done = this.password.val == this.checkPassword.val ? true : false;
-            this.fillDone = this.name.done && this.email.done && this.password.done && this.checkPassword.done ? true : false;
+            this.fillDone = this.name.done && 
+                            this.email.done && 
+                            this.password.done && 
+                            this.checkPassword.done ?
+                            true : false;
             if(!this.fillDone){
                 event.preventDefault();
+            } else {
+                var xhr = new XMLHttpRequest();
+                xhr.open('post', '/api/signUp', true);
+                xhr.setRequestHeader("Content-type","application/json");
+                xhr.send(JSON.stringify({
+                    name: this.name.val,
+                    email: this.email.val,
+                    password: this.password.val,
+                }));
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4 && xhr.status === 200){
+                        let response = xhr.response;
+                        console.log(response);
+                    }
+                };
             }
         }
     },

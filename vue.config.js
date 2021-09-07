@@ -14,6 +14,12 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            '/api/alreadyLogin': { 
+                target: 'http://localhost:3000/api/alreadyLogin', 
+                pathRewrite: {  '^/api/alreadyLogin': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
         } 
     }
 }

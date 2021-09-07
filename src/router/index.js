@@ -21,4 +21,24 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to, from) => {
+  if(from.path != '/login' && to.path != '/login'){
+    var xhr = new XMLHttpRequest();
+    let isAlreadyLogin = false;
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          console.log(JSON.parse(xhr.response));
+            isAlreadyLogin = JSON.parse(xhr.response).alreadyLogin;
+        }
+    };
+    xhr.open('post', '/api/alreadyLogin', false);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+    }));
+    if(!isAlreadyLogin) router.push('/login');
+  }
+});
+
 export default router

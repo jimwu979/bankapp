@@ -27,6 +27,7 @@ router.post('/signUp', function(req, res, next) {
         name: req.body.name,
         email: req.body.email,
         password: newPassword,
+        loginCodeName: ''
       });
       newAccount.save(function(err, data){
         checkResult.isSuccess = true;
@@ -44,10 +45,33 @@ router.post('/login', function(req, res, next) {
   let newPassword = md5.update(req.body.password).digest("hex");
   accountModel.findOne({
     email: req.body.email,
-    password: newPassword
+    password: newPassword,
   }, function(err, data){
-    var isSuccess = data == null ? false : true;
-    res.send(isSuccess);
+    let loginCodeName = Math.floor(Math.random() * Math.pow(10, 20)).toString();
+    accountModel.update(
+      {email: req.body.email}, {loginCodeName: loginCodeName}, 
+      function(err){
+      if(err) console.log(err);
+    });
+    let result = {
+      isSuccess: data == null ? false : true,
+      loginCodeName: loginCodeName
+    };
+    res.send(result);
+  });
+});
+
+// 檢查是否已登入
+router.post('/alreadyLogin', function(req, res, next) {
+  let result = {
+    alreadyLogin: false,
+  }
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    result.alreadyLogin = (data !== null) ? true : false;
+    res.send(result);
   });
 });
 

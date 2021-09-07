@@ -4,14 +4,33 @@ var accountModel = require('../modules/accountModel');
 
 // 註冊新帳號
 router.post('/signUp', function(req, res, next) {
-  var newAccount = new accountModel({
-    name: req.body.name,
+  accountModel.findOne({
     email: req.body.email,
-    password: req.body.password,
-  });
-  newAccount.save(function(err, data){
-    var isSuccess = err ? 'false' : 'success';
-    res.send(isSuccess);
+  }, function(err, data){
+    let checkResult = {
+      isSuccess: 'false',
+      nameIsFill: req.body.name.length > 0,
+      emailIsFill: req.body.email.length > 0,
+      emailIsNew: data == null,
+      passwordIsFill: req.body.password.length > 0,
+    }
+    if( checkResult.nameIsFill && 
+        checkResult.emailIsFill && 
+        checkResult.emailIsNew && 
+        checkResult.passwordIsFill
+    ){
+      let newAccount = new accountModel({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+      });
+      newAccount.save(function(err, data){
+        checkResult.isSuccess = true;
+        res.send(checkResult);
+      });
+    } else {
+      res.send(checkResult);
+    }
   });
 });
 

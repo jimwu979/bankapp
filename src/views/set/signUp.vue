@@ -10,6 +10,7 @@
                 <label for="email">email</label>
                 <input id="email" type="text" v-model="email.val" class="email">
                 <p :class="{'show': !email.done}">email未填寫</p>
+                <p class="show" v-if="!backendCheckResult.emailIsNew">此 email 已經申請過</p>
                 
                 <label for="password">密碼</label>
                 <input id="password" type="password" v-model="password.val">
@@ -36,7 +37,7 @@ export default {
             },
             email: {
                 val: '',
-                done: true
+                done: true,
             },
             password: {
                 val: '',
@@ -46,7 +47,14 @@ export default {
                 val: '',
                 done: true
             },
-            fillDone: false
+            fillDone: false,
+            backendCheckResult: {
+                isSuccess: false,
+                nameIsFill: false,
+                emailIsFill: false,
+                emailIsNew: true,
+                passwordIsFill: false,
+            }
         }
     },
     methods: {
@@ -63,20 +71,26 @@ export default {
             if(!this.fillDone){
                 event.preventDefault();
             } else {
+                let res;
                 var xhr = new XMLHttpRequest();
-                xhr.open('post', '/api/signUp', true);
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4 && xhr.status === 200){
+                        res = JSON.parse(xhr.response);
+                    }
+                };
+                xhr.open('post', '/api/signUp', false);
                 xhr.setRequestHeader("Content-type","application/json");
                 xhr.send(JSON.stringify({
                     name: this.name.val,
                     email: this.email.val,
                     password: this.password.val,
                 }));
-                xhr.onreadystatechange = function(){
-                    if(xhr.readyState === 4 && xhr.status === 200){
-                        let response = xhr.response;
-                        console.log(response);
-                    }
-                };
+                if(res.emailIsNew == false){
+                    this.backendCheckResult.emailIsNew = false;
+                    event.preventDefault();
+                } else {
+                    this.backendCheckResult.emailIsNew = true;
+                }
             }
         }
     },

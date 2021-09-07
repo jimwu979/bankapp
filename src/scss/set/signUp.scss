@@ -45,6 +45,9 @@
                     opacity: 1;
                     pointer-events: auto;
                 }
+                &+p{
+                    margin-top: -22px;
+                }
             }
         }
         a{

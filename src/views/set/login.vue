@@ -33,13 +33,13 @@ export default {
         {
           text: 'email',
           type: 'account',
-          val: 'jimwu979@gmail',
+          val: '',
           onFocus: false
         },
         {
           text: '密碼',
           type: 'password',
-          val: '123',
+          val: '',
           onFocus: false
         }
       ],

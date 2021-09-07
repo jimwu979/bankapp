@@ -10,4 +10,4 @@ export default {
   name: 'cssIcon_delete'
 }
 </script>
-<style lang="scss" src="@/scss/public/cssIcon_delete.scss"></style>
+<style scoped lang="scss" src="@/scss/public/cssIcon_delete.scss"></style>

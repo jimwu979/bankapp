@@ -161,4 +161,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/set/settingClass.scss"></style>
+<style scoped lang="scss" src="@/scss/set/settingClass.scss"></style>

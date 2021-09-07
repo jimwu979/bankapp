@@ -9,4 +9,4 @@ export default {
   name: 'cssIcon_add'
 }
 </script>
-<style lang="scss" src="@/scss/public/cssIcon_add.scss"></style>
+<style scoped lang="scss" src="@/scss/public/cssIcon_add.scss"></style>

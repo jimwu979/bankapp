@@ -116,4 +116,4 @@ export default {
 }
 </script>
 
-<style lang="scss" src="@/scss/record/calendar.scss"></style>
+<style scoped lang="scss" src="@/scss/record/calendar.scss"></style>

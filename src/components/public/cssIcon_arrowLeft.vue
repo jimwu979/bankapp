@@ -11,4 +11,4 @@ export default {
   name: 'cssIcon_arrowLeft'
 }
 </script>
-<style lang="scss" src="@/scss/public/cssIcon_arrowLeft.scss"></style>
+<style scoped lang="scss" src="@/scss/public/cssIcon_arrowLeft.scss"></style>

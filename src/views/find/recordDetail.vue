@@ -111,4 +111,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/find/recordDetail.scss"></style>
+<style scoped lang="scss" src="@/scss/find/recordDetail.scss"></style>

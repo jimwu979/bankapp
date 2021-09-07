@@ -242,4 +242,4 @@ export default {
   },
 }
 </script>
-<style lang="scss" src="@/scss/set/account.scss"></style>
+<style scoped lang="scss" src="@/scss/set/account.scss"></style>

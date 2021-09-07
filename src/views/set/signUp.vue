@@ -96,4 +96,4 @@ export default {
     },
 }
 </script>
-<style lang="scss" src="@/scss/set/signUp.scss"></style>
+<style scoped lang="scss" src="@/scss/set/signUp.scss"></style>

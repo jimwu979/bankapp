@@ -12,7 +12,7 @@
              v-model="inputmodel[index].val" 
              :type="inputmodel[index]['type']">
     </div>
-    <router-link class="loginbtn" to="index">登入</router-link>
+    <router-link class="loginbtn" to="index" @click.native.capture="login">登入</router-link>
     <router-link class="signUp" to="signUp">註冊會員</router-link>
     <div class="fixbox" :class="{'open': errorMessageIsOpen}">
       <div class="lightbox">
@@ -33,13 +33,13 @@ export default {
         {
           text: 'email',
           type: 'account',
-          val: '',
+          val: 'jimwu979@gmail',
           onFocus: false
         },
         {
           text: '密碼',
           type: 'password',
-          val: '',
+          val: '123',
           onFocus: false
         }
       ],
@@ -52,6 +52,25 @@ export default {
     },
     closeLightbox(){
       this.errorMessageIsOpen = false;
+    },
+    login(){
+      let isSuccess = false;
+      let xhr = new XMLHttpRequest();
+      xhr.open('post', '/api/login', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          isSuccess = xhr.response == 'true' ? true : false;
+        }
+      };
+      xhr.send(JSON.stringify({
+        email: this.inputmodel[0].val,
+        password: this.inputmodel[1].val
+      }));
+      if(!isSuccess){
+        this.errorMessageIsOpen = true;
+        event.preventDefault();
+      }
     },
   },
 }

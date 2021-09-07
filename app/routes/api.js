@@ -15,4 +15,15 @@ router.post('/signUp', function(req, res, next) {
   });
 });
 
+// 登入
+router.post('/login', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    password: req.body.password
+  }, function(err, data){
+    var isSuccess = data == null ? false : true;
+    res.send(isSuccess);
+  });
+});
+
 module.exports = router;

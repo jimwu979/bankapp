@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var accountModel = require('../modules/accountModel');
+const crypto = require("crypto");
 
 // 註冊新帳號
 router.post('/signUp', function(req, res, next) {
+  
   accountModel.findOne({
     email: req.body.email,
   }, function(err, data){
@@ -19,10 +21,12 @@ router.post('/signUp', function(req, res, next) {
         checkResult.emailIsNew && 
         checkResult.passwordIsFill
     ){
+      let md5 = crypto.createHash("md5");
+      let newPassword = md5.update(req.body.password).digest("hex");
       let newAccount = new accountModel({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: newPassword,
       });
       newAccount.save(function(err, data){
         checkResult.isSuccess = true;
@@ -36,9 +40,11 @@ router.post('/signUp', function(req, res, next) {
 
 // 登入
 router.post('/login', function(req, res, next) {
+  let md5 = crypto.createHash("md5");
+  let newPassword = md5.update(req.body.password).digest("hex");
   accountModel.findOne({
     email: req.body.email,
-    password: req.body.password
+    password: newPassword
   }, function(err, data){
     var isSuccess = data == null ? false : true;
     res.send(isSuccess);

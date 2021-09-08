@@ -8,7 +8,7 @@
     position: fixed;
     padding-top: 45px;
     background-color: $main_color;
-    @include flexbox(row, center, center);
+    @include flexbox(column, flex-start, flex-start);
     .container{
         @include flexbox(column, flex-start, flex-start);
         h2{
@@ -50,7 +50,7 @@
                 }
             }
         }
-        a{
+        .submit{
             font-size: 18px;
             font-weight: 600;
             margin-top: 15px;
@@ -59,6 +59,17 @@
             border-radius: 3px;
             background-color: #FFF;
             border: 2px solid $text_black;
+        }
+        .goToLogin{
+            width: 90px;
+            height: 30px;
+            bottom: 30px;
+            position: fixed;
+            font-weight: 400;
+            line-height: 30px;
+            text-align: center;
+            display: inline-block;
+            left: calc(50% - 45px);
         }
     }
 }

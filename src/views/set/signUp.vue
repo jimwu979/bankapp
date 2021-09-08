@@ -20,7 +20,8 @@
                 <input id="checkPassword" type="password" v-model="checkPassword.val">
                 <p :class="{'show': !checkPassword.done}">密碼輸入不一致</p>
             </div>
-            <router-link to="login" @click.native.capture="checkForm">送出</router-link>
+            <router-link class="submit" to="login" @click.native.capture="checkForm">送出</router-link>
+            <router-link class="goToLogin" to="login">返回登入頁</router-link>
         </div>
     </div>
 </template>

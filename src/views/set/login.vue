@@ -46,10 +46,6 @@ export default {
       errorMessageIsOpen: false
     }
   },
-  mounted() {
-      this.inputmodel[0].val = '123@123';
-      this.inputmodel[1].val = '123';
-  },
   methods: {
     focusInput(targetInput, status){
       this.inputmodel[targetInput].onFocus = status;

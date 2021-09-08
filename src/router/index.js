@@ -27,7 +27,6 @@ router.beforeEach((to, from) => {
     let isAlreadyLogin = false;
     xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
-          console.log(JSON.parse(xhr.response));
             isAlreadyLogin = JSON.parse(xhr.response).alreadyLogin;
         }
     };

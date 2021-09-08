@@ -23,8 +23,8 @@
                 <li v-for="(item, index) in classList[0].list" :key="index" :ref="`li${index}`" 
                     :style="{'top': listItemHeight * index + 'px'}">
                   <div class="delete" @click="deleteClass(false, index)"></div>
-                  <div class="icon" :class="['color_' + item.color, 'icon_' + item.icon]"></div>
-                  <div class="className">{{ item.name }}</div>
+                  <div class="icon" :class="['color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
+                  <div class="className">{{ item.className }}</div>
                   <div class="move">
                     <span @click="moveToTop(false, true, index)"></span>
                     <span @click="moveToTop(false, false, index)"></span>
@@ -37,8 +37,8 @@
                 <li v-for="(item, index) in classList[1].list" :key="index"
                     :style="{'top': listItemHeight * index + 'px'}">
                   <div class="delete" @click="deleteClass(true, index)"></div>
-                  <div class="icon" :class="['color_' + item.color, 'icon_' + item.icon]"></div>
-                  <div class="className">{{ item.name }}</div>
+                  <div class="icon" :class="['color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
+                  <div class="className">{{ item.className }}</div>
                   <div class="move">
                     <span @click="moveToTop(true, true, index)"></span>
                     <span @click="moveToTop(true, false, index)"></span>
@@ -78,38 +78,8 @@ export default {
       showIncome: false,
       listItemHeight: null,
       classList: [
-        {
-          isIncome: false,
-          list: [
-            {id: 'aa', name: '正餐', icon: 0, color: 7},
-            {id: 'bb', name: '電話費', icon: 1, color: 6},
-            {id: 'cc', name: '水電費', icon: 2, color: 5},
-            {id: 'dd', name: '酒精', icon: 3, color: 4},
-            {id: 'ee', name: '儲糧', icon: 4, color: 3},
-            {id: 'ff', name: '交通', icon: 5, color: 2},
-            {id: 'gg', name: '零食', icon: 6, color: 1},
-            {id: 'hh', name: '其他', icon: 7, color: 0},
-            {id: 'cc', name: '水電費', icon: 2, color: 5},
-            {id: 'dd', name: '酒精', icon: 3, color: 4},
-            {id: 'ee', name: '儲糧', icon: 4, color: 3},
-            {id: 'ff', name: '交通', icon: 5, color: 2},
-            {id: 'gg', name: '零食', icon: 6, color: 1},
-            {id: 'hh', name: '其他', icon: 7, color: 0},
-            {id: 'ee', name: '儲糧', icon: 4, color: 3},
-            {id: 'ff', name: '交通', icon: 5, color: 2},
-            {id: 'gg', name: '零食', icon: 6, color: 1},
-            {id: 'hh', name: '其他', icon: 7, color: 0},
-          ]
-        },
-        {
-          isIncome: true,
-          list: [
-            {id: 'aa', name: '生活費', icon: 0, color: 7},
-            {id: 'bb', name: '加班費', icon: 1, color: 6},
-            {id: 'cc', name: '中獎', icon: 2, color: 5},
-            {id: 'ff', name: '其他', icon: 5, color: 2},
-          ]
-        }
+        { isIncome: false, list: [] },
+        { isIncome: true,  list: [] }
       ],
       deleteTarget: {
         targetInformation: {
@@ -125,9 +95,29 @@ export default {
       }
     }
   },
-  mounted() {
-    this.listItemHeight = this.$refs.li0.clientHeight;
+  beforeMount(){
+    let res;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        res = JSON.parse(xhr.response);
+      }
+    };
+    xhr.open('post', '/api/readClass', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify({
+      email: localStorage.getItem('email'),
+      loginCodeName: localStorage.getItem('loginCodeName'),
+    }));
+    res.forEach(item => {
+      console.log(item);
+      let type = item.typeIsIncome ? 1 : 0;
+      this.classList[type].list.push(item);
+    });
 
+  },
+  mounted() {
+    this.listItemHeight = this.$refs.li0 ? this.$refs.li0.clientHeight : 0;
   },
   methods: {
     moveToTop(isIncome, directionIsTop, itemIndex){

@@ -103,11 +103,12 @@ router.post('/createClass', function(req, res, next) {
   }, function(err, data){
     if(data !== null){
       classModel.find({
-        email: req.body.email
+        email: req.body.email,
+        typeIsIncome: req.body.isIncome,
       }, function(err, classfindData){
         let newClass = new classModel({
           account: req.body.email,
-          order: classfindData.length + 1,
+          order: classfindData.length,
           className: req.body.className,
           typeIsIncome: req.body.isIncome,
           iconImg: req.body.iconImg,
@@ -124,7 +125,18 @@ router.post('/createClass', function(req, res, next) {
 
 // 類別 - 查
 router.post('/readClass', function(req, res, next) {
-  
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountEmail){
+    if(accountEmail != null){
+      classModel.find({
+        account: req.body.email,
+      }, function(err, data){
+        res.send(data);
+      })
+    }
+  });
 });
 
 

@@ -76,7 +76,7 @@ export default {
         icon: 0,
         color: 0
       },
-      className: 'cc',
+      className: '',
       type: {
         isOpen: false,
         isIncome: false
@@ -114,7 +114,7 @@ export default {
         xhr.send(JSON.stringify({
           email: localStorage.getItem('email'),
           loginCodeName: localStorage.getItem('loginCodeName'),
-          name: this.className,
+          className: this.className,
           isIncome: this.type.isIncome,
           iconImg: this.iconStyle.icon,
           iconColor: this.iconStyle.color,

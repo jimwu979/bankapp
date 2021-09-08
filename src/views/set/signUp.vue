@@ -1,5 +1,5 @@
 <template>
-    <div class="signUp" v-if="isAlreadyLogin">
+    <div class="signUp" v-if="!isAlreadyLogin">
         <div class="container">
             <h2>註冊會員</h2>
             <div class="board">

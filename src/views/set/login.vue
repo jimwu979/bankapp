@@ -1,5 +1,5 @@
 <template>
-  <div class="login" v-if="isAlreadyLogin">
+  <div class="login" v-if="!isAlreadyLogin">
     <div class="logo">
       <img src="@/assets/logo.png">
     </div>

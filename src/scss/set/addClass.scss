@@ -1,14 +1,11 @@
 @import '../main.scss';
 
 html{
-    height: 100%;
     body{
-        height: 100%;
-        background-color: #FFF;
         #app{
-            padding-bottom: 0;
             .addClass{
                 height: 100%;
+                background-color: #FFF;
                 header{
 
                 }

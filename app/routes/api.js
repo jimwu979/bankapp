@@ -75,4 +75,21 @@ router.post('/alreadyLogin', function(req, res, next) {
   });
 });
 
+// 登出
+router.post('/logout', function(req, res, next) {
+  console.log('/logout!');
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    accountModel.update(
+      {email: req.body.email}, {loginCodeName: ''}, 
+      function(err){
+        res.send({
+          isSuccess: true
+        })
+    });
+  });
+});
+
 module.exports = router;

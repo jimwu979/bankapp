@@ -19,6 +19,12 @@ module.exports = {
                 pathRewrite: {  '^/api/alreadyLogin': '' }, 
                 changeOrigin: true, 
                 ws: true 
+            },
+            '/api/logout': { 
+                target: 'http://localhost:3000/api/logout', 
+                pathRewrite: {  '^/api/logout': '' }, 
+                changeOrigin: true, 
+                ws: true 
             }, 
         } 
     }

@@ -9,7 +9,7 @@
           帳號設定
         </div>
         <div class="right" v-clickStyle>
-          <router-link to="login">登出</router-link>
+          <router-link to="login" @click.native.capture="logout">登出</router-link>
         </div>
       </div>
     </header>
@@ -235,6 +235,25 @@ export default {
         lightbox.resetEmail.isOpen = false;
         lightbox.resetPassword.isOpen = false;
       }, 300, lightbox);
+    },
+    logout(){
+      let result;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          result = JSON.parse(xhr.response).isSuccess;
+        }
+      };
+      xhr.open('post', '/api/logout', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+      }));
+      if(result){
+        localStorage.removeItem('loginCodeName');
+        localStorage.removeItem('email');
+      }
     },
     back(){
       router.go(-1);

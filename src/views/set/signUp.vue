@@ -1,5 +1,5 @@
 <template>
-    <div class="signUp">
+    <div class="signUp" v-if="isAlreadyLogin">
         <div class="container">
             <h2>註冊會員</h2>
             <div class="board">
@@ -27,11 +27,13 @@
 </template>
 
 <script>
+import router from '@/router';
 
 export default {
     name: 'signUp',
     data() {
         return {
+            isAlreadyLogin: false,
             name: {
                 val: '',
                 done: true
@@ -57,6 +59,22 @@ export default {
                 passwordIsFill: false,
             }
         }
+    },
+    beforeCreate(){
+        let _this = this;
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+                _this.isAlreadyLogin = JSON.parse(xhr.response).alreadyLogin;
+            }
+        };
+        xhr.open('post', '/api/alreadyLogin', false);
+        xhr.setRequestHeader("Content-type","application/json");
+        xhr.send(JSON.stringify({
+            email: localStorage.getItem('email'),
+            loginCodeName: localStorage.getItem('loginCodeName'),
+        }));
+        if(this.isAlreadyLogin) router.push('/');
     },
     methods: {
         checkForm(){

@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-if="isAlreadyLogin">
     <div class="logo">
       <img src="@/assets/logo.png">
     </div>
@@ -24,11 +24,13 @@
 </template>
 
 <script>
+import router from '@/router'
 
 export default {
   name: 'login',
   data() {
     return {
+      isAlreadyLogin: false,
       inputmodel: [
         {
           text: 'email',
@@ -45,6 +47,22 @@ export default {
       ],
       errorMessageIsOpen: false
     }
+  },
+  beforeCreate(){
+    let _this = this;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+            _this.isAlreadyLogin = JSON.parse(xhr.response).alreadyLogin;
+        }
+    };
+    xhr.open('post', '/api/alreadyLogin', false);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+    }));
+    if(this.isAlreadyLogin) router.push('/');
   },
   methods: {
     focusInput(targetInput, status){

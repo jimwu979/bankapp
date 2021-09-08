@@ -76,7 +76,7 @@ export default {
         icon: 0,
         color: 0
       },
-      className: '',
+      className: 'cc',
       type: {
         isOpen: false,
         isIncome: false
@@ -102,7 +102,23 @@ export default {
     },
     submit(){
       if(this.className.length > 0){
-        this.back();
+        let _this = this;
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            if(JSON.parse(xhr.response).isSuccess) _this.back();
+          }
+        };
+        xhr.open('post', '/api/createClass', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({
+          email: localStorage.getItem('email'),
+          loginCodeName: localStorage.getItem('loginCodeName'),
+          name: this.className,
+          isIncome: this.type.isIncome,
+          iconImg: this.iconStyle.icon,
+          iconColor: this.iconStyle.color,
+        }));
       } else {
         this.toggleLightbox(true);
       }

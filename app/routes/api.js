@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var accountModel = require('../modules/accountModel');
+var classModel = require('../modules/classModel');
 const crypto = require("crypto");
 
+//------------------------------------------------------------------------<< 帳號 >>
 // 註冊新帳號
 router.post('/signUp', function(req, res, next) {
   
@@ -91,5 +93,70 @@ router.post('/logout', function(req, res, next) {
     });
   });
 });
+
+//------------------------------------------------------------------------<< 類別 >>
+// 類別 - 增
+router.post('/createClass', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    if(data !== null){
+      classModel.find({
+        email: req.body.email
+      }, function(err, classfindData){
+        let newClass = new classModel({
+          account: req.body.email,
+          order: classfindData.length + 1,
+          className: req.body.className,
+          typeIsIncome: req.body.isIncome,
+          iconImg: req.body.iconImg,
+          iconColor: req.body.iconColor,
+        });
+        newClass.save(function(){
+          res.send({ isSuccess : true });
+        });
+      })
+    }
+  });
+});
+
+
+// 類別 - 查
+router.post('/readClass', function(req, res, next) {
+  
+});
+
+
+// 類別 - 刪
+router.post('/deleteClass', function(req, res, next) {
+  
+});
+
+
+//------------------------------------------------------------------------<< 記帳 >>
+// 記帳 - 增
+router.post('/createRecord', function(req, res, next) {
+  
+});
+
+
+// 記帳 - 查
+router.post('/readRecord', function(req, res, next) {
+  
+});
+
+
+// 記帳 - 改
+router.post('/updateRecord', function(req, res, next) {
+  
+});
+
+
+// 記帳 - 刪
+router.post('/deleteRecord', function(req, res, next) {
+  
+});
+
 
 module.exports = router;

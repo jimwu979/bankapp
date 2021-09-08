@@ -42,6 +42,12 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            '/api/updateClass': { 
+                target: 'http://localhost:3000/api/updateClass', 
+                pathRewrite: {  '^/api/updateClass': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
             '/api/deleteClass': { 
                 target: 'http://localhost:3000/api/deleteClass', 
                 pathRewrite: {  '^/api/deleteClass': '' }, 

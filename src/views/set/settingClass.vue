@@ -110,20 +110,46 @@ export default {
       loginCodeName: localStorage.getItem('loginCodeName'),
     }));
     res.forEach(item => {
-      console.log(item);
       let type = item.typeIsIncome ? 1 : 0;
       this.classList[type].list.push(item);
     });
-
+    this.classList[0].list = this.classList[0].list.sort(function (a, b) {
+      return a.order > b.order ? 1 : -1;
+    });
+    this.classList[1].list = this.classList[1].list.sort(function (a, b) {
+      return a.order > b.order ? 1 : -1;
+    });
   },
-  mounted() {
+  mounted(){
     this.listItemHeight = this.$refs.li0 ? this.$refs.li0.clientHeight : 0;
   },
   methods: {
     moveToTop(isIncome, directionIsTop, itemIndex){
       let siblingIndex = itemIndex + (directionIsTop ? -1 : 1);
       let list = this.classList[isIncome ? 1 : 0].list;
+      [list[itemIndex].order, list[siblingIndex].order] = [list[siblingIndex].order, list[itemIndex].order];
       [list[itemIndex], list[siblingIndex]] = [list[siblingIndex], list[itemIndex]];
+      let res = false;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          res = JSON.parse(xhr.response).isSuccess;
+        }
+      };
+      xhr.open('post', '/api/updateClass', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        targetClass: {
+          order: list[siblingIndex].order, 
+          _id: list[siblingIndex]._id
+        },
+        siblingClass: {
+          order: list[itemIndex].order, 
+          _id: list[itemIndex]._id
+        },
+      }));
     },
     toggleIncome(showIncome){
       this.showIncome = showIncome;

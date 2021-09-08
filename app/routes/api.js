@@ -7,7 +7,6 @@ const crypto = require("crypto");
 //------------------------------------------------------------------------<< 帳號 >>
 // 註冊新帳號
 router.post('/signUp', function(req, res, next) {
-  
   accountModel.findOne({
     email: req.body.email,
   }, function(err, data){
@@ -79,7 +78,6 @@ router.post('/alreadyLogin', function(req, res, next) {
 
 // 登出
 router.post('/logout', function(req, res, next) {
-  console.log('/logout!');
   accountModel.findOne({
     email: req.body.email,
     loginCodeName: req.body.loginCodeName,
@@ -135,6 +133,29 @@ router.post('/readClass', function(req, res, next) {
       }, function(err, data){
         res.send(data);
       })
+    }
+  });
+});
+
+
+// 類別 - 改
+router.post('/updateClass', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, account){
+    if(account != null){
+      classModel.update(
+        { '_id': req.body.targetClass._id }, 
+        { 'order': req.body.targetClass.order }, 
+        function(err){ }
+      );
+      classModel.update(
+        { '_id': req.body.siblingClass._id }, 
+        { 'order': req.body.siblingClass.order }, 
+        function(err){ }
+      )
+      res.send({isSuccess: true});
     }
   });
 });

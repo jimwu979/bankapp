@@ -68,7 +68,8 @@ export default {
       ],
       year: 2021,
       month: 8,
-      isIncome: JSON.parse(this.$route.query.isIncome),
+      // isIncome: JSON.parse(this.$route.query.isIncome),
+      isIncome: false,
     }
   },
   computed: {
@@ -92,6 +93,11 @@ export default {
       return costPercentage;
     },
   },
+  beforeMount() {
+    if(this.$route.query.isIncome){
+      this.isIncome = this.$route.query.isIncome;
+    }
+  },
   mounted() {
   },
   methods: {
@@ -101,4 +107,4 @@ export default {
   },
 }
 </script>
-<style scoped lang="scss" src="@/scss/find/statistics.scss"></style>
+<style lang="scss" src="@/scss/find/statistics.scss"></style>

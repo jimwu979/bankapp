@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var accountModel = require('../modules/accountModel');
 var classModel = require('../modules/classModel');
+var recordModel = require('../modules/recordModel');
 const crypto = require("crypto");
 
 //------------------------------------------------------------------------<< 帳號 >>
@@ -170,7 +171,29 @@ router.post('/deleteClass', function(req, res, next) {
 //------------------------------------------------------------------------<< 記帳 >>
 // 記帳 - 增
 router.post('/createRecord', function(req, res, next) {
-  
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName
+  }, function(err, data){
+    if(data !== null){
+      let newRecord = new recordModel({
+        account: req.body.email,
+        classId: req.body.classId,
+        typeIsIncome: req.body.typeIsIncome,
+        description: req.body.description,
+        value: req.body.value,
+        time: {
+            year: req.body.time.year,
+            month: req.body.time.month,
+            day: req.body.time.day,
+        },
+        timestamp: req.body.timestamp,
+      });
+      newRecord.save(function(){
+        res.send({isSuccess: true});
+      });
+    }
+  });
 });
 
 

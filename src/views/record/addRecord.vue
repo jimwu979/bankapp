@@ -19,12 +19,12 @@
     <main>
       <div class="container">
         <ul class="classSelector">
-          <li v-for="(item, index) in _class.list" 
+          <li v-for="(item, index) in _class[type.isIncome ? 'income' : 'cost'].list"
               :key="index" 
-              :class="{'gray': index !== _class.selectIndex}"
+              :class="{'gray': index !== _class[type.isIncome ? 'income' : 'cost'].selectIndex}"
               @click="selectClass(index)">
-            <div class="icon" :class="['icon_'+ item.icon, 'color_'+ item.color]"></div>
-            <span>{{ item.name }}</span>
+            <div class="icon" :class="['icon_'+ item.iconImg, 'color_'+ item.iconColor]"></div>
+            <span>{{ item.className }}</span>
           </li>
           <li>
             <router-link to="addClass">
@@ -69,7 +69,7 @@
               <div v-clickStyle class="add" @click="runCalculate(true)">+</div>
               <div v-clickStyle class="subtract" @click="runCalculate(false)"><span>-</span></div>
               <div class="submit">
-                <div v-if="!form.recordNumber.calculate.calculateMode" class="cssIcon cssIcon_check" @click="back">
+                <div v-if="!form.recordNumber.calculate.calculateMode" class="cssIcon cssIcon_check" @click="submit">
                   <div></div>
                 </div>
                 <div v-else class="calculate" @click="calculateIsDone">=</div>
@@ -108,20 +108,14 @@ export default {
         selectorIsOpen: false,
       },
       _class: {
-        list: [
-          { icon: 0, color: 2, name: '電話費'},
-          { icon: 1, color: 3, name: '水電費'},
-          { icon: 2, color: 5, name: '酒精'},
-          { icon: 3, color: 7, name: '儲糧'},
-          { icon: 4, color: 0, name: '零食'},
-          { icon: 5, color: 3, name: '交通'},
-          { icon: 6, color: 6, name: '飲料'},
-          { icon: 7, color: 3, name: '其他'},
-          { icon: 8, color: 1, name: '正餐'},
-          { icon: 9, color: 4, name: '貓'},
-          { icon: 10, color: 5, name: '車'},
-        ],
-        selectIndex: null
+        income: {
+          list: [],
+          selectIndex: null
+        },
+        cost: {
+          list: [],
+          selectIndex: null
+        }
       },
       form: {
         isOpen: false,
@@ -148,9 +142,36 @@ export default {
       calendarIsOpen: false
     }
   },
+  beforeMount(){
+    let res;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        res = JSON.parse(xhr.response);
+      }
+    };
+    xhr.open('post', '/api/readClass', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify({
+      email: localStorage.getItem('email'),
+      loginCodeName: localStorage.getItem('loginCodeName'),
+    }));
+    res.forEach(item => {
+      this._class[item.typeIsIncome ? 'income' : 'cost'].list.push(item);
+    });
+    this._class['income'].list = this._class['income'].list.sort(function (a, b) {
+      return a.order > b.order ? 1 : -1;
+    });
+    this._class['cost'].list = this._class['cost'].list.sort(function (a, b) {
+      return a.order > b.order ? 1 : -1;
+    });
+  },
   mounted() {
     this.form.date = this.today;
     this.mounted = true;
+
+    let t = new Date();
+    console.log(t);
   },
   computed: {
     today(){
@@ -235,7 +256,7 @@ export default {
       this.type.selectorIsOpen = false;
     },
     selectClass(selectIndex){
-      this._class.selectIndex = selectIndex;
+      this._class[this.type.isIncome ? 'income' : 'cost'].selectIndex = selectIndex;
       this.form.isOpen = true;
       this.type.selectorIsOpen = false;
     },
@@ -248,6 +269,32 @@ export default {
     },
     back(){
       router.go(-1);
+    },
+    submit(){
+      let _this = this;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          if(JSON.parse(xhr.response).isSuccess) _this.back();
+        }
+      };
+      xhr.open('post', '/api/createRecord', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        classId: _class.list[_class.selectIndex]._id,
+        typeIsIncome: this.type.isIncome,
+        description: this.form.description.value,
+        value: Number(this.form.recordNumber.value),
+        time: {
+            year: this.form.date.year,
+            month: this.form.date.month,
+            day: this.form.date.day,
+        },
+        timestamp: new Date(),
+      }));
     },
   },
 }

@@ -48,7 +48,6 @@ export default {
       event.stopPropagation();
     },
     toggleYear(toggleDirection){
-      console.log(this.selectYear);
       this.selectYear = this.selectYear + toggleDirection;
     },
     toggleMonth(selectMonth){

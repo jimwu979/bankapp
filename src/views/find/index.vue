@@ -57,6 +57,7 @@ import monthlyCalendar from '@/components/find/monthlyCalendar.vue'
 import cssIcon_hamburger from '@/components/public/cssIcon_hamburger.vue'
 import cssIcon_add from '@/components/public/cssIcon_add.vue'
 import moment from 'moment'
+import router from '@/router'
 export default {
   name: 'index',
   components: {
@@ -88,6 +89,8 @@ export default {
     }
   },
   beforeMount(){
+    this.selectYear = (this.$route.query.year !== undefined) ? Number(this.$route.query.year) : new Date().getFullYear();
+    this.selectMonth = (this.$route.query.month !== undefined) ? Number(this.$route.query.month) : new Date().getMonth() + 1;
     this.init();
   },
   computed: {

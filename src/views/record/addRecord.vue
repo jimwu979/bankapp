@@ -288,11 +288,10 @@ export default {
         typeIsIncome: this.type.isIncome,
         description: this.form.description.value,
         value: Number(this.form.recordNumber.value),
-        time: {
-            year: this.form.date.year,
-            month: this.form.date.month,
-            day: this.form.date.day,
-        },
+        // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
+        year: this.form.date.year,
+        month: this.form.date.month,
+        day: this.form.date.day,
         timestamp: new Date(),
       }));
     },

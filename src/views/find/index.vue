@@ -28,20 +28,20 @@
             <span>{{ total.balance }}</span>
           </div>
         </div>
-        <div class="day board" v-for="(day, day_index) in costList" :key="day_index">
+        <div class="day board" v-for="(day, day_index) in costList" v-show="day.length > 0" :key="day_index">
           <div class="title">
-            <div>{{nowMonth}}/{{costList[day_index]['date']}} 週{{dayOfTheWeek[day_index]}}</div>
+            <div>{{nowMonth}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
             <div>收支: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
             <router-link class="cost_item" v-clickStyle
-              v-for="(items, i_index) in costList[day_index]['items']"
+              v-for="(item, i_index) in costList[day_index]"
               :key="i_index"
               :to="{ path: 'recordDetail', query: { year: nowYear, month: nowMonth, day: day.date}}"
             >
-              <div :class="['icon', 'color_' + i_index, 'icon_' + i_index]"></div>
-              <div class="class">{{items.class}}<span>{{items.description}}</span></div>
-              <div class="number">{{items.number}}</div>
+              <div :class="['icon', 'color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
+              <div class="class">{{item.className}}<span>{{item.description}}</span></div>
+              <div class="number">{{item.value}}</div>
             </router-link>
           </div>
         </div>
@@ -64,62 +64,76 @@ export default {
   },
   data() {
     return {
+      classList: [
+        // {_id: '', className: '', iconImg: 0, iconColor: 0, typeIsIncome: false},
+      ],
       costList: [
-        {
-          date: 1,
-          items: [
-            { class: '生活費',  icon: 2, color: 6, income: true,  description: '', number: 20000 },
-            { class: '主餐',    icon: 2, color: 6, income: false, description: '', number: -120 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '備註備註備註備註備註', number: -15 },
-            { class: '零食',    icon: 3, color: 6, income: false, description: '', number: -15 },
-          ]
-        },
-        {
-          date: 6,
-          items: [
-            { class: '主餐',    icon: 2, color: 6, income: false, description: '備註備註備註', number: -210 },
-            { class: '零食',    icon: 3, color: 6, income: false, description: '', number: -135 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '', number: -657 },
-          ]
-        },
-        {
-          date: 12,
-          items: [
-            { class: '零食',    icon: 3, color: 6, income: false, description: '', number: -12 },
-            { class: '主餐',    icon: 2, color: 6, income: false, description: '', number: -20 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '', number: -65 },
-          ]
-        },
-        {
-          date: 14,
-          items: [
-            { class: '主餐',    icon: 2, color: 6, income: false, description: '', number: -210 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '', number: -65 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '備註備註備註備註備註備註備註備註備註備註備註備註備註備註備註', number: -600 },
-            { class: '其他',    icon: 2, color: 6, income: false, description: '', number: -10 },
-            { class: '零食',    icon: 3, color: 6, income: false, description: '', number: -35 },
-          ]
-        },
+        // { 
+        //   classId: 'abcd1234', 
+        //   className: '生活費', 
+        //   iconImg: 2, 
+        //   iconColor: 6, 
+        //   typeIsIncome: true, 
+        //   description: '', 
+        //   value: 20000, 
+        //   year: 2021,
+        //   month: 9,
+        //   day: 2 
+        // },
       ],
       nowYear: 2021,
-      nowMonth: 8,
+      nowMonth: 9,
       CalendarIsOpen: false,
-      clickItemsIndex: [null, null]
+      clickItemsIndex: [null, null],
     }
+  },
+  created(){
+    let numberOfDays = new Date(this.nowYear, this.nowMonth, 0).getDate();
+    for(let d = 0; d < numberOfDays; d++){
+      this.costList.push([]);
+    }
+  },
+  beforeMount(){
+    let _this = this;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        let res = JSON.parse(xhr.response);
+        _this.classList = res.classList;
+        res.record.forEach(function(item){
+          let classItem = _this.classList.filter(function(_class){
+            return _class._id == item.classId;
+          });
+          item.iconColor = classItem[0].iconColor;
+          item.iconImg = classItem[0].iconImg;
+          item.className = classItem[0].className;
+          item.value = (item.typeIsIncome) ? item.value : item.value * -1;
+          _this.costList[item.day - 1].push(item);
+        });
+      }
+    };
+    xhr.open('post', '/api/readRecord', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify({
+      email: localStorage.getItem('email'),
+      loginCodeName: localStorage.getItem('loginCodeName'),
+      year: this.nowYear,
+      month: this.nowMonth,
+    }));
   },
   computed: {
     total(){
       let dayLength = this.costList.length;
       let income = 0;
       let cost = 0;
-      for(let m = 0; m < dayLength; m++){
-        let constItemsLength = this.costList[m].items.length;
-        for(let n = 0; n < constItemsLength; n++){
-          let costItems = this.costList[m].items[n];
-          if(costItems.income){
-            income += costItems.number;
+      for(let d = 0; d < dayLength; d++){
+        let costItemsLength = this.costList[d].length;
+        for(let n = 0; n < costItemsLength; n++){
+          let costItems = this.costList[d][n];
+          if(costItems.typeIsIncome){
+            income += costItems.value;
           } else {
-            cost += costItems.number;
+            cost += costItems.value;
           }
         }
       }
@@ -132,21 +146,21 @@ export default {
       let dailyCost = [];
       for(let i = 0; i < dayLength; i++){
         let costTotal = 0;
-        this.costList[i].items.forEach(element => {
-          costTotal += element.number;
+        this.costList[i].forEach(element => {
+          costTotal += element.value;
         });
         dailyCost.push(costTotal);
       }
       return dailyCost;
     },
     dayOfTheWeek(){
-      let dayLength = this.costList.length;
-      let dayOfTheWeekChart = ['日', '一', '二', '三', '四', '五', '六'];
+      let year = this.nowYear;
+      let month = this.nowMonth;
+      let numberOfDays = new Date(year, month, 0).getDate();
       let dayOfTheWeek = [];
-      for(let d = 0; d < dayLength; d++){
-        let dayMoment = moment(this.nowYear + '/' + this.nowMonth + '/' + this.costList[d].date);
-        let dayIndex = dayMoment.weekday();
-        dayOfTheWeek.push(dayOfTheWeekChart[dayIndex])
+      for(let d=1; d<=numberOfDays; d++){
+        let day = new Date(year + '/'+ month +'/' + d).getDay();
+        dayOfTheWeek.push(['日', '一', '二', '三', '四', '五', '六'][day]);
       }
       return dayOfTheWeek;
     }

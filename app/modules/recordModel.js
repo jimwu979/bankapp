@@ -8,11 +8,10 @@ var recordSchema = new mongoose.Schema({
     typeIsIncome: Boolean,
     description: String,
     value: Number,
-    time: {
-        year: Number,
-        month: Number,
-        day: Number,
-    },
+    // time: String,
+    year: Number,
+    month: Number,
+    day: Number,
     timestamp: Array,
 });
 recordSchema.set('collection', 'record');

@@ -182,11 +182,10 @@ router.post('/createRecord', function(req, res, next) {
         typeIsIncome: req.body.typeIsIncome,
         description: req.body.description,
         value: req.body.value,
-        time: {
-            year: req.body.time.year,
-            month: req.body.time.month,
-            day: req.body.time.day,
-        },
+        // time: req.body.time,
+        year: req.body.year,
+        month: req.body.month,
+        day: req.body.day,
         timestamp: req.body.timestamp,
       });
       newRecord.save(function(){
@@ -199,7 +198,27 @@ router.post('/createRecord', function(req, res, next) {
 
 // 記帳 - 查
 router.post('/readRecord', function(req, res, next) {
-  
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    if(data !== null){
+      recordModel.find({
+        account: req.body.email,
+        year: req.body.year,
+        month: req.body.month,
+      }, function(err, recordData){
+        classModel.find({
+          account: req.body.email,
+        }, function(err, iconData){
+          res.send({
+            record: recordData,
+            classList: iconData
+          })
+        })
+      });
+    }
+  })
 });
 
 

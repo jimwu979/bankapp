@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar fixbox" :class="{'open': isOpen}">
+  <div class="calendar fixbox" :class="{'open': isOpenFromParent}">
     <div class="lightbox">
       <div class="title">
         <span>{{ today.year }}年</span>
@@ -64,9 +64,6 @@ export default {
         day:    today.getDate(),
         dayOfTheWeek: today.getDay()
       }
-    },
-    openCalendar(){
-      if(this.isOpenFromParent) this.isOpen = this.isOpenFromParent;
     },
   },
   methods: {

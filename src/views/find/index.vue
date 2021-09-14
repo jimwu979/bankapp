@@ -6,7 +6,7 @@
           <cssIcon_hamburger></cssIcon_hamburger>
         </div>
         <div class="center">
-          <monthlyCalendar></monthlyCalendar>
+          <monthlyCalendar @selectOtherMonth="switchMonth" :parentYear="selectYear" :parentMonth="selectMonth"></monthlyCalendar>
         </div>
       </div>
     </header>
@@ -14,12 +14,12 @@
       <div class="container">
         <div class="total board">
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: nowYear, month: nowMonth, isIncome: true}}">
+            :to="{ path: '/statistics', query: { year: selectYear, month: selectMonth, isIncome: true}}">
             <span>收入</span>
             <span>{{ total.income }}</span>
           </router-link>
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: nowYear, month: nowMonth, isIncome: false}}">
+            :to="{ path: '/statistics', query: { year: selectYear, month: selectMonth, isIncome: false}}">
             <span>支出</span>
             <span>{{ total.cost }}</span>
           </router-link>
@@ -30,14 +30,14 @@
         </div>
         <div class="day board" v-for="(day, day_index) in costList" v-show="day.length > 0" :key="day_index">
           <div class="title">
-            <div>{{nowMonth}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
+            <div>{{selectMonth}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
             <div>收支: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
             <router-link class="cost_item" v-clickStyle
               v-for="(item, i_index) in costList[day_index]"
               :key="i_index"
-              :to="{ path: 'recordDetail', query: { year: nowYear, month: nowMonth, day: day.date}}"
+              :to="{ path: 'recordDetail', query: { year: selectYear, month: selectMonth, day: day.date}}"
             >
               <div :class="['icon', 'color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
               <div class="class">{{item.className}}<span>{{item.description}}</span></div>
@@ -81,45 +81,14 @@ export default {
         //   day: 2 
         // },
       ],
-      nowYear: 2021,
-      nowMonth: 9,
+      selectYear: 2021,
+      selectMonth: 9,
       CalendarIsOpen: false,
       clickItemsIndex: [null, null],
     }
   },
-  created(){
-    let numberOfDays = new Date(this.nowYear, this.nowMonth, 0).getDate();
-    for(let d = 0; d < numberOfDays; d++){
-      this.costList.push([]);
-    }
-  },
   beforeMount(){
-    let _this = this;
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        let res = JSON.parse(xhr.response);
-        _this.classList = res.classList;
-        res.record.forEach(function(item){
-          let classItem = _this.classList.filter(function(_class){
-            return _class._id == item.classId;
-          });
-          item.iconColor = classItem[0].iconColor;
-          item.iconImg = classItem[0].iconImg;
-          item.className = classItem[0].className;
-          item.value = (item.typeIsIncome) ? item.value : item.value * -1;
-          _this.costList[item.day - 1].push(item);
-        });
-      }
-    };
-    xhr.open('post', '/api/readRecord', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-      year: this.nowYear,
-      month: this.nowMonth,
-    }));
+    this.init();
   },
   computed: {
     total(){
@@ -154,8 +123,8 @@ export default {
       return dailyCost;
     },
     dayOfTheWeek(){
-      let year = this.nowYear;
-      let month = this.nowMonth;
+      let year = this.selectYear;
+      let month = this.selectMonth;
       let numberOfDays = new Date(year, month, 0).getDate();
       let dayOfTheWeek = [];
       for(let d=1; d<=numberOfDays; d++){
@@ -168,6 +137,47 @@ export default {
   methods: {
     openNav(){
       this.$emit('openNav');
+    },
+    switchMonth(newTime){
+      this.selectYear = newTime.selectYear;
+      this.selectMonth = newTime.selectMonth;
+      this.init();
+    },
+    init(){
+      // 初始化 天數
+      this.costList = [];
+      let numberOfDays = new Date(this.selectYear, this.selectMonth, 0).getDate();
+      for(let d = 0; d < numberOfDays; d++){
+        this.costList.push([]);
+      }
+
+      // 載入帳目資料
+      let _this = this;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          let res = JSON.parse(xhr.response);
+          _this.classList = res.classList;
+          res.record.forEach(function(item){
+            let classItem = _this.classList.filter(function(_class){
+              return _class._id == item.classId;
+            });
+            item.iconColor = classItem[0].iconColor;
+            item.iconImg = classItem[0].iconImg;
+            item.className = classItem[0].className;
+            item.value = (item.typeIsIncome) ? item.value : item.value * -1;
+            _this.costList[item.day - 1].push(item);
+          });
+        }
+      };
+      xhr.open('post', '/api/readRecord', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        year: this.selectYear,
+        month: this.selectMonth,
+      }));
     },
   },
 }

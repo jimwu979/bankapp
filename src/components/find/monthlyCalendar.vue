@@ -4,18 +4,18 @@
         v-clickStyle
         :class="{'mousedown': false, 'open': calendarIsOpen}">
     <div @click="toggleCalendar(false)" v-stopPropagation class="backgroundCover"></div>
-    <span class="headerTitle">8月</span>
+    <span class="headerTitle">{{ selectMonth }}月</span>
     <div class="calendar" @click.stop="toggleCalendar()">
       <div class="container">
         <div class="year">
           <div @click.stop="toggleYear(-1)" v-clickStyle></div>
-          <span>{{nowYear}}</span>
+          <span>{{selectYear}}</span>
           <div @click.stop="toggleYear(1)" v-clickStyle></div>
         </div>
         <ol>
           <li v-for="m in 12" 
               :key="m" 
-              :class="{'now': m == nowMonth}"
+              :class="{'now': m == parentMonth && selectYear == parentYear}"
               @click="toggleMonth(m)"
           >{{m}}月</li>
         </ol>
@@ -26,12 +26,17 @@
 <script>
 export default {
   name: 'monthlyCalendar',
+  props: ['parentYear', 'parentMonth'],
   data() {
     return {
-      nowYear: 2021,
-      nowMonth: 8,
-      calendarIsOpen: false
+      calendarIsOpen: false,
+      selectYear: 0,
+      selectMonth: 0,
     }
+  },
+  created(){
+      this.selectYear = this.parentYear;
+      this.selectMonth = this.parentMonth;
   },
   methods: {
     toggleCalendar(toggleDirection){
@@ -43,10 +48,15 @@ export default {
       event.stopPropagation();
     },
     toggleYear(toggleDirection){
-      this.nowYear = this.nowYear + toggleDirection;
+      console.log(this.selectYear);
+      this.selectYear = this.selectYear + toggleDirection;
     },
     toggleMonth(selectMonth){
-      this.nowMonth = selectMonth;
+      this.selectMonth = selectMonth;
+      this.$emit('selectOtherMonth', {
+          selectYear: this.selectYear, 
+          selectMonth: this.selectMonth
+      });
       this.toggleCalendar();
     },
   },

@@ -314,6 +314,7 @@ export default {
       if(this.$route.query.id){
         // 更新帳目
         let _this = this;
+        this.timestamp.push(new Date())
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(){
           if(xhr.readyState === 4 && xhr.status === 200){
@@ -335,7 +336,7 @@ export default {
           year: this.form.date.year,
           month: this.form.date.month,
           day: this.form.date.day,
-          timestamp: this.timestamp.push(new Date()),
+          timestamp: this.timestamp,
         }));
       } else {
         // 新增帳目

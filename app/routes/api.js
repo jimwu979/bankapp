@@ -268,7 +268,19 @@ router.post('/updateRecord', function(req, res, next) {
 
 // 記帳 - 刪
 router.post('/deleteRecord', function(req, res, next) {
-  
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      recordModel.remove({
+        email: req.body.email,
+        _id: req.body.recordId,
+      }, function(err, data){
+        res.send({isSuccess: true});
+      })
+    }
+  });
 });
 
 

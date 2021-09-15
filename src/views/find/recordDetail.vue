@@ -152,7 +152,22 @@ export default {
       this.lightboxIsOpen = false;
     },
     deleteRecord(){
-      this.back();
+      let xhr = new XMLHttpRequest();
+      let _this = this;
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          if(JSON.parse(xhr.response).isSuccess){
+            _this.back();
+          }
+        }
+      };
+      xhr.open('post', '/api/deleteRecord', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        recordId: this.$route.query.id,
+      }));
     },
     back(){
       router.go(-1);

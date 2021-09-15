@@ -260,10 +260,13 @@
                             &.calendarBtn{
                                 span{
                                     &:nth-of-type(1){
-                                        
+                                        font-size: 12px;
+                                        line-height: 12px;
                                     }
                                     &:nth-of-type(2){
-                                        
+                                        font-weight: 400;
+                                        padding-top: 1px;
+                                        font-size: 16px;
                                     }
                                 }
                             }

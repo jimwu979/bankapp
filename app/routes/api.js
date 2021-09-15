@@ -197,7 +197,7 @@ router.post('/createRecord', function(req, res, next) {
 
 
 // 記帳 - 查
-router.post('/readRecord', function(req, res, next) {
+router.post('/readRecord_aMonth', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
     loginCodeName: req.body.loginCodeName,
@@ -220,11 +220,49 @@ router.post('/readRecord', function(req, res, next) {
     }
   })
 });
+router.post('/readRecord_findOne', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    if(data !== null){
+      recordModel.findOne({
+        account: req.body.email,
+        _id: req.body.id,
+      }, function(err, recordData){
+        res.send(recordData);
+      });
+    }
+  })
+});
 
 
 // 記帳 - 改
 router.post('/updateRecord', function(req, res, next) {
-  
+  console.log(req.body);
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, account){
+    if(account !== null){
+      recordModel.update({
+        account: req.body.email,
+        _id: req.body.recordId
+      }, {
+        classId: req.body.classId,
+        typeIsIncome: req.body.typeIsIncome,
+        description: req.body.description,
+        value: req.body.value,
+        // time: req.body.time,
+        year: req.body.year,
+        month: req.body.month,
+        day: req.body.day,
+        timestamp: req.body.timestamp,
+      }, function(err, data){
+        res.send({ isSuccess: true });
+      })
+    }
+  })
 });
 
 

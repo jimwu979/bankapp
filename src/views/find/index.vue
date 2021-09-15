@@ -37,7 +37,7 @@
             <router-link class="cost_item" v-clickStyle
               v-for="(item, i_index) in costList[day_index]"
               :key="i_index"
-              :to="{ path: 'recordDetail', query: { year: selectYear, month: selectMonth, day: day.date}}"
+              :to="{ path: 'recordDetail', query: { id: item._id}}"
             >
               <div :class="['icon', 'color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
               <div class="class">{{item.className}}<span>{{item.description}}</span></div>
@@ -173,7 +173,7 @@ export default {
           });
         }
       };
-      xhr.open('post', '/api/readRecord', false);
+      xhr.open('post', '/api/readRecord_aMonth', false);
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),

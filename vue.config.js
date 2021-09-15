@@ -55,16 +55,22 @@ module.exports = {
                 ws: true 
             }, 
 
-            //------------------------------------------------------------------------<< 類別 >>
+            //------------------------------------------------------------------------<< 記帳 >>
             '/api/createRecord': { 
                 target: 'http://localhost:3000/api/createRecord', 
                 pathRewrite: {  '^/api/createRecord': '' }, 
                 changeOrigin: true, 
                 ws: true 
             }, 
-            '/api/readRecord': { 
-                target: 'http://localhost:3000/api/readRecord', 
-                pathRewrite: {  '^/api/readRecord': '' }, 
+            '/api/readRecord_aMonth': { 
+                target: 'http://localhost:3000/api/readRecord_aMonth', 
+                pathRewrite: {  '^/api/readRecord_aMonth': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
+            '/api/readRecord_findOne': { 
+                target: 'http://localhost:3000/api/readRecord_findOne', 
+                pathRewrite: {  '^/api/readRecord_findOne': '' }, 
                 changeOrigin: true, 
                 ws: true 
             }, 

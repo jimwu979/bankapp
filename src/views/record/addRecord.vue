@@ -64,6 +64,7 @@
                   (form.date.month == today.month) && 
                   (form.date.day == today.day)
                 ">今天</span>
+                <span v-else>{{form.date.year}}</span>
                 <span>{{ form.date.month }}/{{ form.date.day }}</span>
               </div>
               <div v-clickStyle class="add" @click="runCalculate(true)">+</div>
@@ -103,6 +104,7 @@ export default {
   },
   data() {
     return {
+      recordId: '',
       type: {
         isIncome: false,
         selectorIsOpen: false,
@@ -124,9 +126,9 @@ export default {
             onFocus: false
         },
         date: {
-          year: null,
-          month: null,
-          day: null
+          year: 0,
+          month: 0,
+          day: 0
         },
         recordNumber: {
           value: '0',
@@ -138,21 +140,30 @@ export default {
           }
         }
       },
+      timestamp: [],
       mounted: false,
       calendarIsOpen: false
     }
   },
   beforeMount(){
+    // 初始化日期
+    this.form.date = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+    }
+      
+    // 載入收支類別
     let res;
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        res = JSON.parse(xhr.response);
+    let xhrClass = new XMLHttpRequest();
+    xhrClass.onreadystatechange = function(){
+      if(xhrClass.readyState === 4 && xhrClass.status === 200){
+        res = JSON.parse(xhrClass.response);
       }
     };
-    xhr.open('post', '/api/readClass', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
+    xhrClass.open('post', '/api/readClass', false);
+    xhrClass.setRequestHeader('Content-type', 'application/json');
+    xhrClass.send(JSON.stringify({
       email: localStorage.getItem('email'),
       loginCodeName: localStorage.getItem('loginCodeName'),
     }));
@@ -165,24 +176,44 @@ export default {
     this._class['cost'].list = this._class['cost'].list.sort(function (a, b) {
       return a.order > b.order ? 1 : -1;
     });
+
+    // 修改帳目
+    if(this.$route.query.id){
+      let id = this.$route.query.id;
+      this.recordId = id;
+      let _this = this;
+      let xhrRecord = new XMLHttpRequest();
+      xhrRecord.onreadystatechange = function(){
+        if(xhrRecord.readyState === 4 && xhrRecord.status === 200){
+          let res = JSON.parse(xhrRecord.response);
+          _this.type.isIncome = res.isIncome;
+          _this.form.description.value = res.description;
+          _this.form.date = {
+            year: res.year,
+            month: res.month,
+            day: res.day,
+          }
+          _this.form.recordNumber.value = res.value;
+          _this.form.isOpen = true;
+          _this.timestamp = res.timestamp;
+          let classOrder = _this._class[res.typeIsIncome?'income':'cost'].list.filter(function(value){
+            return res.classId == value._id;
+          })[0].order;
+          _this._class[res.typeIsIncome?'income':'cost'].selectIndex = classOrder;
+        }
+      };
+      xhrRecord.open('post', '/api/readRecord_findOne', false);
+      xhrRecord.setRequestHeader('Content-type', 'application/json');
+      xhrRecord.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        id: id
+      }));
+    } 
+    
   },
   mounted() {
-    this.form.date = this.today;
     this.mounted = true;
-
-    let t = new Date();
-    console.log(t);
-  },
-  computed: {
-    today(){
-      let today = new Date();
-      return {
-        year:   today.getFullYear(),
-        month:  today.getMonth() + 1,
-        day:    today.getDate(),
-        dayOfTheWeek: today.getDay()
-      }
-    }
   },
   methods: {
     //calendar
@@ -244,6 +275,15 @@ export default {
     },
 
     //other
+    today(){
+      let today = new Date();
+      return {
+        year:   today.getFullYear(),
+        month:  today.getMonth() + 1,
+        day:    today.getDate(),
+        // dayOfTheWeek: today.getDay()
+      }
+    },
     toggleTypeMenu(toggleDirection){
       if(toggleDirection !== undefined){
         this.type.selectorIsOpen = toggleDirection;
@@ -271,29 +311,59 @@ export default {
       router.go(-1);
     },
     submit(){
-      let _this = this;
-      let xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4 && xhr.status === 200){
-          if(JSON.parse(xhr.response).isSuccess) _this.back();
-        }
-      };
-      xhr.open('post', '/api/createRecord', false);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
-      xhr.send(JSON.stringify({
-        email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
-        classId: _class.list[_class.selectIndex]._id,
-        typeIsIncome: this.type.isIncome,
-        description: this.form.description.value,
-        value: Number(this.form.recordNumber.value),
-        // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
-        year: this.form.date.year,
-        month: this.form.date.month,
-        day: this.form.date.day,
-        timestamp: new Date(),
-      }));
+      if(this.$route.query.id){
+        // 更新帳目
+        let _this = this;
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            if(JSON.parse(xhr.response).isSuccess) _this.back();
+          }
+        };
+        xhr.open('post', '/api/updateRecord', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
+        xhr.send(JSON.stringify({
+          email: localStorage.getItem('email'),
+          loginCodeName: localStorage.getItem('loginCodeName'),
+          recordId: this.$route.query.id,
+          classId: _class.list[_class.selectIndex]._id,
+          typeIsIncome: this.type.isIncome,
+          description: this.form.description.value,
+          value: Number(this.form.recordNumber.value),
+          // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
+          year: this.form.date.year,
+          month: this.form.date.month,
+          day: this.form.date.day,
+          timestamp: this.timestamp.push(new Date()),
+        }));
+      } else {
+        // 新增帳目
+        let _this = this;
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            if(JSON.parse(xhr.response).isSuccess) _this.back();
+          }
+        };
+        xhr.open('post', '/api/createRecord', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
+        xhr.send(JSON.stringify({
+          email: localStorage.getItem('email'),
+          loginCodeName: localStorage.getItem('loginCodeName'),
+          classId: _class.list[_class.selectIndex]._id,
+          typeIsIncome: this.type.isIncome,
+          description: this.form.description.value,
+          value: Number(this.form.recordNumber.value),
+          // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
+          year: this.form.date.year,
+          month: this.form.date.month,
+          day: this.form.date.day,
+          timestamp: new Date(),
+        }));        
+      }
+
     },
   },
 }

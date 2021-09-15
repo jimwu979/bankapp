@@ -349,7 +349,7 @@ export default {
         };
         xhr.open('post', '/api/createRecord', false);
         xhr.setRequestHeader('Content-type', 'application/json');
-        let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
+        let _class = this._class[this.type.isIncome ? 'income' : 'cost'];
         xhr.send(JSON.stringify({
           email: localStorage.getItem('email'),
           loginCodeName: localStorage.getItem('loginCodeName'),

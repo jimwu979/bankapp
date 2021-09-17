@@ -164,7 +164,31 @@ router.post('/updateClass', function(req, res, next) {
 
 // 類別 - 刪
 router.post('/deleteClass', function(req, res, next) {
-  
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      classModel.deleteOne({
+        email: req.body.email,
+        _id: req.body.classId,
+      }, function(err, deleteClassData){
+        
+      });
+      classModel.update({
+        email: req.body.email,
+        typeIsIncome: req.body.isIncome,
+        order: {'$gt': req.body.order},
+      }, {
+        '$inc': {'order': -1},
+      }, {
+        multi: true,
+      }, function(err, updateData){
+
+      });
+      res.send({isSuccess: true});
+    }
+  });
 });
 
 

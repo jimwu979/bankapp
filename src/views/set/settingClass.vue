@@ -19,10 +19,10 @@
         <div class="listbox">
           <div>
             <div class="olbox">
-              <ol :style="{'height': classList[0].list.length * listItemHeight + 'px'}">
-                <li v-for="(item, index) in classList[0].list" :key="index" :ref="`li${index}`" 
+              <ol :style="{'height': classList.cost.length * listItemHeight + 'px'}">
+                <li v-for="(item, index) in classList.cost" :key="index" :ref="`li${index}`" 
                     :style="{'top': listItemHeight * index + 'px'}">
-                  <div class="delete" @click="deleteClass(false, index)"></div>
+                  <div class="delete" @click="deleteClass('cost', item._id)"></div>
                   <div class="icon" :class="['color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
                   <div class="className">{{ item.className }}</div>
                   <div class="move">
@@ -33,10 +33,10 @@
               </ol>
             </div>
             <div class="olbox">
-              <ol :style="{'height': classList[1].list.length * listItemHeight + 'px'}">
-                <li v-for="(item, index) in classList[1].list" :key="index"
+              <ol :style="{'height': classList.income.length * listItemHeight + 'px'}">
+                <li v-for="(item, index) in classList.income" :key="index"
                     :style="{'top': listItemHeight * index + 'px'}">
-                  <div class="delete" @click="deleteClass(true, index)"></div>
+                  <div class="delete" @click="deleteClass('income', item._id)"></div>
                   <div class="icon" :class="['color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
                   <div class="className">{{ item.className }}</div>
                   <div class="move">
@@ -77,15 +77,14 @@ export default {
     return {
       showIncome: false,
       listItemHeight: null,
-      classList: [
-        { isIncome: false, list: [] },
-        { isIncome: true,  list: [] }
-      ],
+      classList: {
+        income: [],
+        cost: []
+      },
       deleteTarget: {
-        targetInformation: {
-          isIncome: false,
-          id: 'ABC',
-        },
+        type: '',
+        id: '',
+        order: -1,
         warn: false,
       },
       dragClass: {
@@ -96,37 +95,40 @@ export default {
     }
   },
   beforeMount(){
-    let res;
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        res = JSON.parse(xhr.response);
-      }
-    };
-    xhr.open('post', '/api/readClass', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-    }));
-    res.forEach(item => {
-      let type = item.typeIsIncome ? 1 : 0;
-      this.classList[type].list.push(item);
-    });
-    this.classList[0].list = this.classList[0].list.sort(function (a, b) {
-      return a.order > b.order ? 1 : -1;
-    });
-    this.classList[1].list = this.classList[1].list.sort(function (a, b) {
-      return a.order > b.order ? 1 : -1;
-    });
+    this.init();
   },
   mounted(){
     this.listItemHeight = this.$refs.li0 ? this.$refs.li0.clientHeight : 0;
   },
   methods: {
+    init(){
+      let _this = this;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          let res = JSON.parse(xhr.response);
+          _this.classList.income = _this.classListcost = [];
+          res.forEach(item => {
+            _this.classList[item.typeIsIncome ? 'income' : 'cost'].push(item);
+          });
+          _this.classList.income =  _this.classList.income.sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
+          _this.classList.cost =  _this.classList.cost.sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
+        }
+      };
+      xhr.open('post', '/api/readClass', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+      }));
+    },
     moveToTop(isIncome, directionIsTop, itemIndex){
       let siblingIndex = itemIndex + (directionIsTop ? -1 : 1);
-      let list = this.classList[isIncome ? 1 : 0].list;
+      let list = this.classList[isIncome ? 'income' : 'cost'];
       [list[itemIndex].order, list[siblingIndex].order] = [list[siblingIndex].order, list[itemIndex].order];
       [list[itemIndex], list[siblingIndex]] = [list[siblingIndex], list[itemIndex]];
       let res = false;
@@ -154,19 +156,38 @@ export default {
     toggleIncome(showIncome){
       this.showIncome = showIncome;
     },
-    deleteClass(isIncome, index){
+    deleteClass(itemType, itemId){
+      let order = this.classList[itemType].filter(function(item){
+        return item._id == itemId;
+      })[0].order;
       this.deleteTarget = {
-        targetInformation: {
-          isIncome: isIncome,
-          index: index,
-        },
+        type: itemType,
+        id: itemId,
+        order: order,
         warn: true,
       }
     },
     confirmDelete(){
-      let targetInformation = this.deleteTarget.targetInformation;
-      this.classList[targetInformation.isIncome ? 1 : 0].list.splice([targetInformation.index], 1);
-      this.deleteTarget.warn = false;
+      let _this = this;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          if(JSON.parse(xhr.response).isSuccess){
+            _this.classList.income = _this.classList.cost = [];
+            _this.init();
+            _this.deleteTarget.warn = false;
+          }
+        }
+      };
+      xhr.open('post', '/api/deleteClass', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        classId: this.deleteTarget.id,
+        isIncome: this.deleteTarget.type == 'income' ? true : false,
+        order: this. deleteTarget.order,
+      }));
     },
     cancelDelete(){
       this.deleteTarget.warn = false;

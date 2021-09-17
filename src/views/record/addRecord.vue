@@ -186,7 +186,7 @@ export default {
       xhrRecord.onreadystatechange = function(){
         if(xhrRecord.readyState === 4 && xhrRecord.status === 200){
           let res = JSON.parse(xhrRecord.response);
-          _this.type.isIncome = res.isIncome;
+          _this.type.isIncome = res.typeIsIncome;
           _this.form.description.value = res.description;
           _this.form.date = {
             year: res.year,
@@ -323,7 +323,7 @@ export default {
         };
         xhr.open('post', '/api/updateRecord', false);
         xhr.setRequestHeader('Content-type', 'application/json');
-        let _class = this._class[this.typeIsIncome ? 'income' : 'cost'];
+        let _class = this._class[this.type.isIncome ? 'income' : 'cost'];
         xhr.send(JSON.stringify({
           email: localStorage.getItem('email'),
           loginCodeName: localStorage.getItem('loginCodeName'),

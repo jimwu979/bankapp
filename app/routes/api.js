@@ -244,6 +244,23 @@ router.post('/readRecord_aMonth', function(req, res, next) {
     }
   })
 });
+router.post('/readRecord_aClasswithinAMonth', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, data){
+    if(data !== null){
+      recordModel.find({
+        account: req.body.email,
+        year: req.body.year,
+        month: req.body.month,
+        classId: req.body.classId,
+      }, function(err, recordData){
+        res.send(recordData);
+      });
+    }
+  })
+});
 router.post('/readRecord_findOne', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,

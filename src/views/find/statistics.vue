@@ -25,7 +25,10 @@
                   year: year, 
                   month: month, 
                   isIncome: isIncome, 
-                  classId: item.id,
+                  classId: item.classId,
+                  className: item.className,
+                  iconImg: item.icon,
+                  iconColor: item.color
                 }
               }">
               <div :class="['icon', 'color_' + item.color, 'icon_' + item.icon]"></div>

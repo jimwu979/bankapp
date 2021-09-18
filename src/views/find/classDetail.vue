@@ -8,7 +8,7 @@
           <hr>
         </div>
         <div class="center headerTitle">
-          {{ nowMonth }}月
+          {{ month }}月
         </div>
       </div>
     </header>
@@ -21,27 +21,27 @@
               :to="{
                 path: 'recordDetail', 
                 query: {
-                  year: nowYear,
-                  month: nowMonth,
+                  year: year,
+                  month: month,
                   isIncome: this.$route.query.isIncome,
                   class: item.class
                 }
               }"
               v-clickStyle 
-              v-for="(item, index) in costList"
+              v-for="(item, index) in recordList"
             >
-              <div :class="['icon', 'color_' + item.color, 'icon_' + item.icon]"></div>
+              <div :class="['icon', 'color_' + iconColor, 'icon_' + iconImg]"></div>
               <div class="information">
                 <div class="text">
                   <div class="class">
-                    {{ nowClass }}
+                    {{ className }}
                     <span>{{ item.description }}</span>
                     <span>{{ calculatePercentage[index] }}%</span>
                   </div>
-                  <div class="number">{{ item.number }}</div>
+                  <div class="number">{{ item.value }}</div>
                 </div>
                 <hr class="lineChart" :style="{width: calculatePercentage[index] + '%'}">
-                <div class="date">{{ nowYear +'/'+ nowMonth +'/'+ item.day }}</div>
+                <div class="date">{{ year +'/'+ month +'/'+ item.day }}</div>
               </div>
             </router-link>
           </div>
@@ -61,21 +61,36 @@ export default {
   },
   data() {
     return {
-      nowYear: 2021,
-      nowMonth: 8,
-      nowClass: '正餐',
-      costList: [
-        { day: 1,  icon: 2, color: 4, number: 4820, description: '備註備註' },
-        { day: 5,  icon: 2, color: 4, number: 2749, description: null },
-        { day: 12, icon: 2, color: 4, number: 2522, description: null },
-        { day: 16, icon: 2, color: 4, number: 1240, description: '備註備註備註備註備註備註' },
-        { day: 17, icon: 2, color: 4, number: 962,  description: null },
-        { day: 18, icon: 2, color: 4, number: 609,  description: null },
-        { day: 27, icon: 2, color: 4, number: 508,  description: null },
-        { day: 29, icon: 2, color: 4, number: 465,  description: null },
-      ],
+      year: this.$route.query.year,
+      month: this.$route.query.month,
+      className: this.$route.query.className,
+      iconImg: this.$route.query.iconImg,
+      iconColor: this.$route.query.iconColor,
+      recordList: [],
       isIncome: JSON.parse(this.$route.query.isIncome),
     }
+  },
+  created(){
+    let _this = this;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        let res = JSON.parse(xhr.response);
+        res.sort((a, b) => {
+          return b.value - a.value;
+        })
+        _this.recordList = res;
+      }
+    };
+    xhr.open('post', '/api/readRecord_aClasswithinAMonth', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify({
+      email: localStorage.getItem('email'),
+      loginCodeName: localStorage.getItem('loginCodeName'),
+      classId: this.$route.query.classId,
+      year: this.year,
+      month: this.month,
+    }));
   },
   computed: {
     IncomeOrCost(){
@@ -83,15 +98,15 @@ export default {
     },
     totalCost(){
       let totalCost = 0;
-      this.costList.forEach(item => {
-        totalCost += item.number;
+      this.recordList.forEach(item => {
+        totalCost += item.value;
       });
       return totalCost;
     },
     calculatePercentage(){
       let costPercentage = [];
-      this.costList.forEach(item => {
-        let percentage = (item.number / this.totalCost) * 100;
+      this.recordList.forEach(item => {
+        let percentage = (item.value / this.totalCost) * 100;
         percentage = Math.round(percentage);
         costPercentage.push(percentage);
       });

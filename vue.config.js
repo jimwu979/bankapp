@@ -68,6 +68,12 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            '/api/readRecord_aClasswithinAMonth': { 
+                target: 'http://localhost:3000/api/readRecord_aClasswithinAMonth', 
+                pathRewrite: {  '^/api/readRecord_aClasswithinAMonth': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
             '/api/readRecord_findOne': { 
                 target: 'http://localhost:3000/api/readRecord_findOne', 
                 pathRewrite: {  '^/api/readRecord_findOne': '' }, 

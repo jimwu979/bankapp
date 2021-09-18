@@ -13,7 +13,7 @@
     <main>
       <div class="container">
         <div class="board">
-          <h2>{{ IncomeOrCost }}列表</h2>
+          <h2>{{ isIncome ? '收入':'支出' }}列表</h2>
           <div class="list">
             <router-link 
               v-for="(item, index) in statisticsList"
@@ -73,7 +73,7 @@ export default {
     let routeQuery = this.$route.query;
     this.year     = routeQuery.year? Number(routeQuery.year) : new Date().getFullYear();
     this.month    = routeQuery.month? Number(routeQuery.month) : new Date().getMonth() + 1;
-    this.isIncome = routeQuery.isIncome? routeQuery.isIncome : this.isIncome;
+    this.isIncome = routeQuery.isIncome? JSON.parse(routeQuery.isIncome) : this.isIncome;
     let xhr = new XMLHttpRequest();
     let _this = this;
     xhr.onreadystatechange = function(){
@@ -114,9 +114,6 @@ export default {
     }));
   },
   computed: {
-    IncomeOrCost(){
-      return this.isIncome ? '收入' : '支出';
-    },
     totalCost(){
       let totalCost = 0;
       this.statisticsList.forEach(item => {
@@ -133,13 +130,6 @@ export default {
       });
       return costPercentage;
     },
-  },
-  beforeMount() {
-    if(this.$route.query.isIncome){
-      this.isIncome = this.$route.query.isIncome;
-    }
-  },
-  mounted() {
   },
   methods: {
     back(){

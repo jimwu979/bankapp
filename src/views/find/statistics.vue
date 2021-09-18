@@ -84,9 +84,6 @@ export default {
     calculatePercentage(){
       let costPercentage = [];
       this.statisticsList.forEach(item => {
-        // console.log(item.number);
-        // console.log(this.totalCost);
-        // console.log(item.number / this.totalCost);
         let percentage = this.totalCost > 0 ? (item.number / this.totalCost) * 100 : 0;
         percentage = Math.round(percentage);
         costPercentage.push(percentage);

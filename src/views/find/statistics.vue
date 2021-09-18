@@ -6,7 +6,8 @@
           <cssIcon_arrowLeft></cssIcon_arrowLeft>
         </div>
         <div class="center">
-          <monthlyCalendar :parentYear="year" :parentMonth="month"></monthlyCalendar>
+          <monthlyCalendar @selectOtherMonth="selectOtherMonth"
+           :parentYear="year" :parentMonth="month"></monthlyCalendar>
         </div>
       </div>
     </header>
@@ -70,48 +71,7 @@ export default {
     }
   },
   created(){
-    let routeQuery = this.$route.query;
-    this.year     = routeQuery.year? Number(routeQuery.year) : new Date().getFullYear();
-    this.month    = routeQuery.month? Number(routeQuery.month) : new Date().getMonth() + 1;
-    this.isIncome = routeQuery.isIncome? JSON.parse(routeQuery.isIncome) : this.isIncome;
-    let xhr = new XMLHttpRequest();
-    let _this = this;
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        let res = JSON.parse(xhr.response);
-        _this.classList = res.classList.filter(item => {
-          return item.typeIsIncome == _this.isIncome;
-        });
-        _this.recordList = res.record.filter(item => {
-          return item.typeIsIncome == _this.isIncome;
-        });
-        _this.classList.forEach(item => {
-          let sum = 0;
-          _this.recordList.forEach(recordItem => {
-            if(recordItem.classId == item._id) sum += recordItem.value;
-          })
-          _this.statisticsList.push({
-            classId: item._id,
-            className: item.className,
-            icon: item.iconImg,
-            color: item.iconColor,
-            number: sum,
-          });
-        });
-        _this.statisticsList.sort((a, b) => {
-          return b.number - a.number;
-        });
-      } 
-    };
-    xhr.open('post', '/api/readRecord_aMonth', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-      isIncome: this.isIncome,
-      year: this.year,
-      month: this.month,
-    }));
+    this.init();
   },
   computed: {
     totalCost(){
@@ -124,7 +84,10 @@ export default {
     calculatePercentage(){
       let costPercentage = [];
       this.statisticsList.forEach(item => {
-        let percentage = (item.number / this.totalCost) * 100;
+        // console.log(item.number);
+        // console.log(this.totalCost);
+        // console.log(item.number / this.totalCost);
+        let percentage = this.totalCost > 0 ? (item.number / this.totalCost) * 100 : 0;
         percentage = Math.round(percentage);
         costPercentage.push(percentage);
       });
@@ -132,6 +95,57 @@ export default {
     },
   },
   methods: {
+    init(){
+      let routeQuery = this.$route.query;
+      this.year     = routeQuery.year? Number(routeQuery.year) : new Date().getFullYear();
+      this.month    = routeQuery.month? Number(routeQuery.month) : new Date().getMonth() + 1;
+      this.isIncome = routeQuery.isIncome? JSON.parse(routeQuery.isIncome) : this.isIncome;
+      let xhr = new XMLHttpRequest();
+      let _this = this;
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          let res = JSON.parse(xhr.response);
+          _this.classList = res.classList.filter(item => {
+            return item.typeIsIncome == _this.isIncome;
+          });
+          _this.recordList = res.record.filter(item => {
+            return item.typeIsIncome == _this.isIncome;
+          });
+          _this.statisticsList = [];
+          _this.classList.forEach(item => {
+            let sum = 0;
+            _this.recordList.forEach(recordItem => {
+              if(recordItem.classId == item._id) sum += recordItem.value;
+            })
+            _this.statisticsList.push({
+              classId: item._id,
+              className: item.className,
+              icon: item.iconImg,
+              color: item.iconColor,
+              number: sum,
+            });
+          });
+          _this.statisticsList.sort((a, b) => {
+            return b.number - a.number;
+          });
+        } 
+      };
+      xhr.open('post', '/api/readRecord_aMonth', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        isIncome: this.isIncome,
+        year: this.year,
+        month: this.month,
+      }));
+    },
+    selectOtherMonth(time){
+      router.push('/statistics?year='+ time.selectYear +'&&month='+ time.selectMonth);
+      setTimeout(()=>{
+        this.init();
+      }, 0);
+    },
     back(){
       router.go(-1);
     },

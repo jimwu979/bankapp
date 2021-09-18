@@ -15,7 +15,7 @@
         <ol>
           <li v-for="m in 12" 
               :key="m" 
-              :class="{'now': m == parentMonth && selectYear == parentYear}"
+              :class="{'now': m == selectMonth && selectYear == parentYear}"
               @click="toggleMonth(m)"
           >{{m}}月</li>
         </ol>

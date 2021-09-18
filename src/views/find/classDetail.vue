@@ -17,19 +17,8 @@
         <div class="board">
           <h2>{{ IncomeOrCost }}列表</h2>
           <div class="list">
-            <router-link
-              :to="{
-                path: 'recordDetail', 
-                query: {
-                  year: year,
-                  month: month,
-                  isIncome: this.$route.query.isIncome,
-                  class: item.class
-                }
-              }"
-              v-clickStyle 
-              v-for="(item, index) in recordList"
-            >
+            <router-link v-clickStyle v-for="(item, index) in recordList"
+              :to="{ path: 'recordDetail', query: { id: item._id}}">
               <div :class="['icon', 'color_' + iconColor, 'icon_' + iconImg]"></div>
               <div class="information">
                 <div class="text">

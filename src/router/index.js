@@ -18,6 +18,9 @@ const router = createRouter({
     { path: '/login',         name: 'login',        component: () => import('../views/set/login.vue') },
     { path: '/signUp',        name: 'signUp',       component: () => import('../views/set/signUp.vue') },
     { path: '/settingClass',  name: 'settingClass', component: () => import('../views/set/settingClass.vue') },
+
+    // redirect
+    { path: '/:pathMatch(.*)*', redirect: '/' },
   ]
 })
 

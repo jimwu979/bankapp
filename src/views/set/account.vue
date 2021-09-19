@@ -198,7 +198,26 @@ export default {
           pwd_new.showErrorMessage = (pwd_new.val.length == 0) ? true : false;
           pwd_check.showErrorMessage = (pwd_new.val !== pwd_check.val) ? true : false;
           if( !pwd_ori.showErrorMessage && !pwd_new.showErrorMessage && !pwd_check.showErrorMessage ){
-            this.closeLightbox();
+            let _this = this;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+              if(xhr.readyState === 4 && xhr.status === 200){
+                if(JSON.parse(xhr.response).isSuccess){
+                  pwd_ori.showErrorMessage = false;
+                  _this.closeLightbox();
+                } else {
+                  pwd_ori.showErrorMessage = true;
+                }
+              }
+            };
+            xhr.open('post', '/api/resetPassword', false);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(JSON.stringify({
+              email: localStorage.getItem('email'),
+              loginCodeName: localStorage.getItem('loginCodeName'),
+              oldPassword: pwd_ori.val,
+              newPassword: pwd_new.val,
+            }));
           }
           break;
       }

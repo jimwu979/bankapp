@@ -93,6 +93,25 @@ router.post('/logout', function(req, res, next) {
   });
 });
 
+// 重設密碼
+router.post('/resetPassword', function(req, res, next) {
+  let oldPassword = crypto.createHash("md5").update(req.body.oldPassword).digest("hex");
+  let newPassword = crypto.createHash("md5").update(req.body.newPassword).digest("hex");
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      accountModel.updateOne(
+        {email: req.body.email, password: oldPassword}, 
+        {password: newPassword}, 
+        function(err, data){
+          res.send({isSuccess: data.modifiedCount > 0 ? true : false});
+      });
+    }
+  });
+});
+
 //------------------------------------------------------------------------<< 類別 >>
 // 類別 - 增
 router.post('/createClass', function(req, res, next) {

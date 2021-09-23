@@ -112,6 +112,16 @@ router.post('/resetPassword', function(req, res, next) {
   });
 });
 
+// 取得帳號資料
+router.post('/getAccount', function(req, res, next){
+  accountModel.findOne({
+    'email': req.body.email,
+    'loginCodeName': req.body.loginCodeName,
+  }, function(err, data){
+    res.send(data);
+  });
+})
+
 //------------------------------------------------------------------------<< 類別 >>
 // 類別 - 增
 router.post('/createClass', function(req, res, next) {

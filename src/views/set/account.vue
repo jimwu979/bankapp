@@ -113,8 +113,8 @@ export default {
       },
       preview: null,
       image: null,
-      name: '吳新蓁',
-      email: 'jimwu979@gmail.com',
+      name: '',
+      email: '',
       lightbox: {
         isOpen: false,
         resetImg: {
@@ -148,8 +148,23 @@ export default {
       }
     }
   },
-  mounted() {
-
+  created() {
+    let _this = this;
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        let res = JSON.parse(xhr.response);
+       _this.name = res.name;
+       _this.email = res.email;
+       if(res.photo.length > 0) _this.img.val = '/photo/' + res.photo;
+      }
+    };
+    xhr.open('post', '/api/getAccount', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify({
+      email: localStorage.getItem('email'),
+      loginCodeName: localStorage.getItem('loginCodeName'),
+    }));
   },
   methods: {
     uploadImg(){

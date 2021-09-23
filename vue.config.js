@@ -34,6 +34,12 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            '/api/getAccount': { 
+                target: 'http://localhost:3000/api/getAccount', 
+                pathRewrite: {  '^/api/getAccount': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
             '/album/upload': { 
                 target: 'http://localhost:3000/album/upload', 
                 pathRewrite: {  '^/album/upload': '' }, 
@@ -104,6 +110,8 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            
+            //------------------------------------------------------------------------<< 後端資源 >>
             '/photo/': { 
                 target: 'http://localhost:3000/photo/', 
                 pathRewrite: {  '^/photo/': '' }, 

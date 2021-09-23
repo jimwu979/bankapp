@@ -78,8 +78,9 @@ export default {
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
-          if(JSON.parse(xhr.response)){
-            localStorage.setItem('loginCodeName', result.loginCodeName);
+          let res = JSON.parse(xhr.response);
+          if(res){
+            localStorage.setItem('loginCodeName', res.loginCodeName);
             localStorage.setItem('email', _this.inputmodel[0].val);
             _this.$emit('login');
           } else {

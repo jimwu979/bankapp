@@ -88,6 +88,7 @@ export default {
       if(result.isSuccess){
         localStorage.setItem('loginCodeName', result.loginCodeName);
         localStorage.setItem('email', this.inputmodel[0].val);
+        this.$emit('login');
       } else {
         this.errorMessageIsOpen = true;
         event.preventDefault();

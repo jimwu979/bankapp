@@ -29,7 +29,8 @@ router.post('/signUp', function(req, res, next) {
         name: req.body.name,
         email: req.body.email,
         password: newPassword,
-        loginCodeName: ''
+        loginCodeName: '',
+        photo: '',
       });
       newAccount.save(function(err, data){
         checkResult.isSuccess = true;

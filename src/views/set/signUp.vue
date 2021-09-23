@@ -103,6 +103,7 @@ export default {
                     name: this.name.val,
                     email: this.email.val,
                     password: this.password.val,
+                    photo: '',
                 }));
                 if(res.emailIsNew == false){
                     this.backendCheckResult.emailIsNew = false;

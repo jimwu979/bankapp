@@ -34,6 +34,12 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            '/album/upload': { 
+                target: 'http://localhost:3000/album/upload', 
+                pathRewrite: {  '^/album/upload': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
             
             //------------------------------------------------------------------------<< 類別 >>
             '/api/createClass': { 
@@ -95,6 +101,12 @@ module.exports = {
             '/api/deleteRecord': { 
                 target: 'http://localhost:3000/api/deleteRecord', 
                 pathRewrite: {  '^/api/deleteRecord': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
+            '/photo/': { 
+                target: 'http://localhost:3000/photo/', 
+                pathRewrite: {  '^/photo/': '' }, 
                 changeOrigin: true, 
                 ws: true 
             }, 

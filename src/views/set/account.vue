@@ -16,9 +16,10 @@
     <main>
       <div class="container">
         <div class="board">
+          <!-- <img src="/photo/11@11.jpg"> -->
           <div class="photo">
             <div :style="{'background-image': 'url('+ img.val +')'}">
-              <input id="uploadImage" type="file" @change="uploadImg">
+              <input id="uploadImage" type="file" name="file" @change="uploadImg">
               <label for="uploadImage">
                 <div>
                   <cssIcon_edit></cssIcon_edit>
@@ -155,15 +156,30 @@ export default {
       var input = event.target;
       if (input.files) {
         let fileSize = Math.round(input.files[0].size / 1024 / 1024);
-        if(fileSize <= 10){
+        if(fileSize > 10){
+          this.openLightbox('img');
+        } else {
           var reader = new FileReader();
           reader.onload = (e) => {
             this.img.val = e.target.result;
           }
           this.image = input.files[0];
-            reader.readAsDataURL(input.files[0]);
-        } else {
-          this.openLightbox('img');
+          reader.readAsDataURL(input.files[0]);
+          let formData = new FormData();
+          let uploadInputTag = document.getElementById('uploadImage');
+          formData.append('email', localStorage.getItem('email'));
+          formData.append('loginCodeName', localStorage.getItem('loginCodeName'));
+          formData.append('file', uploadInputTag.files[0]);
+          let _this = this;
+          let xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+              let res = JSON.parse(xhr.response);
+              console.log(res);
+            }
+          };
+          xhr.open('post', '/album/upload', false);
+          xhr.send(formData);
         }
       }
     },

@@ -7,6 +7,7 @@ var signUpSchema = new mongoose.Schema({
   email: String,
   password: String,
   loginCodeName: String,
+  photo: String,
 });
 signUpSchema.set('collection', 'account');
 var signUpModel = mongoose.model('account', signUpSchema);

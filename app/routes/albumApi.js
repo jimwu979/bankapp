@@ -8,7 +8,8 @@ let storage = multer.diskStorage({
     cb(null, './photo');
   },
   filename: function(req, file, cb){
-    cb(null, req.body.email + '.' + file.originalname.split('.')[1]);
+    let fileName = file.originalname.split('.');
+    cb(null, req.body.email + '.' + fileName[fileName.length - 1]);
   }
 });
 let upload = multer({storage: storage});

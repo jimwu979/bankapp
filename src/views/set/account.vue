@@ -16,7 +16,6 @@
     <main>
       <div class="container">
         <div class="board">
-          <!-- <img src="/photo/11@11.jpg"> -->
           <div class="photo">
             <div :style="{'background-image': 'url('+ img.val +')'}">
               <input id="uploadImage" type="file" name="file" @change="uploadImg">

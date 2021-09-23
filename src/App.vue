@@ -36,7 +36,6 @@ export default {
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
          _this.name = res.name;
-         console.log(res.photo);
          _this.photo = res.photo.length > 0 ? '/photo/' + res.photo : '';
         }
       };
@@ -47,7 +46,7 @@ export default {
         loginCodeName: localStorage.getItem('loginCodeName'),
       }));
     },
-    toggleNav: function(){
+    toggleNav(){
       this.navStatus = !this.navStatus;
     }
   }

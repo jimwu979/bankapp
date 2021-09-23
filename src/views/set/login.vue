@@ -72,27 +72,26 @@ export default {
       this.errorMessageIsOpen = false;
     },
     login(){
-      let result;
+      let _this = this;
       let xhr = new XMLHttpRequest();
       xhr.open('post', '/api/login', false);
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
-          result = JSON.parse(xhr.response);
+          if(JSON.parse(xhr.response)){
+            localStorage.setItem('loginCodeName', result.loginCodeName);
+            localStorage.setItem('email', _this.inputmodel[0].val);
+            _this.$emit('login');
+          } else {
+            _this.errorMessageIsOpen = true;
+            event.preventDefault();
+          }
         }
       };
       xhr.send(JSON.stringify({
         email: this.inputmodel[0].val,
         password: this.inputmodel[1].val
       }));
-      if(result.isSuccess){
-        localStorage.setItem('loginCodeName', result.loginCodeName);
-        localStorage.setItem('email', this.inputmodel[0].val);
-        this.$emit('login');
-      } else {
-        this.errorMessageIsOpen = true;
-        event.preventDefault();
-      }
     },
   },
 }

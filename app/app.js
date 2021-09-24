@@ -3,6 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
@@ -27,7 +30,9 @@ app.use('/album', albumRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  fs.readFile('./public/index.html', (err, data) => {
+    res.end(data);
+  })
 });
 
 // error handler

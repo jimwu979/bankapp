@@ -12,7 +12,19 @@
     </header>
     <main>
       <div class="container">
-        <div class="total board">
+        <div v-if="selectYear==today.year && selectMonth==today.month" class="dashboard board">
+          <div :class="averageBalanceMode">
+            <span>日均餘額</span>
+            <span>{{ dashboard.averageBalance }}</span>
+          </div>
+          <ul>
+            <li>收入: {{ dashboard.income }}</li>
+            <li>支出: {{ dashboard.cost }}</li>
+            <li>餘額:  {{ dashboard.balance }}</li>
+            <li>本月剩餘天數: {{ dashboard.remainDays }}</li>
+          </ul>
+        </div>
+        <div v-else class="total board">
           <router-link class="totalType"
             :to="{ path: '/statistics', query: { year: selectYear, month: selectMonth, isIncome: true}}">
             <span>收入</span>
@@ -82,18 +94,69 @@ export default {
         //   day: 2 
         // },
       ],
-      selectYear: 2021,
-      selectMonth: 9,
+      selectYear: 0,
+      selectMonth: 0,
       CalendarIsOpen: false,
       clickItemsIndex: [null, null],
+      today: {
+        year: 0,
+        month: 0,
+        day: 0
+      }
     }
   },
   beforeMount(){
+    let date = new Date();
+    this.today.year = date.getFullYear();
+    this.today.month = date.getMonth() + 1;
+    this.today.day = date.getDate();
     this.selectYear = (this.$route.query.year !== undefined) ? Number(this.$route.query.year) : new Date().getFullYear();
     this.selectMonth = (this.$route.query.month !== undefined) ? Number(this.$route.query.month) : new Date().getMonth() + 1;
     this.init();
   },
   computed: {
+    averageBalanceMode(){
+      let averageBalanceStatus = '';
+      if(this.dashboard.averageBalance > 600){ 
+        averageBalanceStatus = 'green';
+      }else if(this.dashboard.averageBalance > 300){ 
+        averageBalanceStatus = 'yellow';
+      }else{ 
+        averageBalanceStatus = 'red';
+      }
+      return averageBalanceStatus;
+    },
+    dashboard(){
+      let dayLength = this.costList.length;
+      let income = 0;
+      let cost = 0;
+      for(let d = 0; d < dayLength; d++){
+        let costItemsLength = this.costList[d].length;
+        for(let n = 0; n < costItemsLength; n++){
+          let costItems = this.costList[d][n];
+          if(costItems.typeIsIncome){
+            income += costItems.value;
+          } else {
+            cost += costItems.value;
+          }
+        }
+      }
+      cost = Math.abs(cost);
+      let balance = income - cost;
+
+      let date = new Date();
+      let daysLength = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+      let remainDays = daysLength - date.getDate();
+      let averageBalance = balance / remainDays;
+      
+      return {
+        income, // 收入
+        cost, // 支出
+        balance, // 餘額
+        averageBalance, // 日均餘額
+        remainDays, //本月剩餘日
+      }
+    },
     total(){
       let dayLength = this.costList.length;
       let income = 0;

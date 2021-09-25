@@ -1,0 +1,15 @@
+{
+    "short_name": "bankapp",
+    "name": "bankapp",
+    "icons": [
+        {
+            "src":"logo-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "./?utm_source=web_app_manifest",
+    "background_color": "#F9DB61",
+    "theme_color": "#FFF",
+    "display": "standalone"
+}

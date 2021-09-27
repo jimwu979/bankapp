@@ -30,7 +30,7 @@ app.use('/album', albumRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  fs.readFile('./public/index.html', (err, data) => {
+  fs.readFile(__dirname + '/public/index.html', (err, data) => {
     res.end(data);
   })
 });

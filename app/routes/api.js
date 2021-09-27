@@ -132,7 +132,7 @@ router.post('/createClass', function(req, res, next) {
   }, function(err, data){
     if(data !== null){
       classModel.find({
-        email: req.body.email,
+        account: req.body.email,
         typeIsIncome: req.body.isIncome,
       }, function(err, classfindData){
         let newClass = new classModel({
@@ -310,7 +310,6 @@ router.post('/readRecord_findOne', function(req, res, next) {
 
 // 記帳 - 改
 router.post('/updateRecord', function(req, res, next) {
-  console.log(req.body);
   accountModel.findOne({
     email: req.body.email,
     loginCodeName: req.body.loginCodeName,

@@ -193,7 +193,7 @@ export default {
             month: res.month,
             day: res.day,
           }
-          _this.form.recordNumber.value = res.value;
+          _this.form.recordNumber.value = res.value.toString();
           _this.form.isOpen = true;
           _this.timestamp = res.timestamp;
           let classOrder = _this._class[res.typeIsIncome?'income':'cost'].list.filter(function(value){

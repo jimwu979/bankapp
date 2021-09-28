@@ -118,6 +118,14 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             }, 
+            
+            //------------------------------------------------------------------------<< 初始化 store >>
+            '/initStore': { 
+                target: 'http://localhost:3000/api/initStore', 
+                pathRewrite: {  '^/api/initStore': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
         } 
     }
 }

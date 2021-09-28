@@ -354,4 +354,39 @@ router.post('/deleteRecord', function(req, res, next) {
 });
 
 
+//------------------------------------------------------------------------<< 初始化Store >>
+// 初始化
+router.post('/initStore', function(req, res, next){
+  let resData = {
+    classList: [],
+    recordList: [],
+    name: '',
+    email: '',
+    photo: '',
+  };
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      resData.name = accountData.name;
+      resData.email = accountData.email;
+      resData.photo = accountData.photo;
+      recordModel.find({
+        account: req.body.email,
+        year: req.body.year,
+        month: req.body.month,
+      }, function(err, recordData){
+        resData.recordList = recordData;
+        classModel.find({
+          account: req.body.email,
+        }, function(err, classData){
+          resData.classList = classData;
+          res.send(resData);
+        });
+      });
+    }
+  });
+});
+
 module.exports = router;

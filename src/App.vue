@@ -73,8 +73,21 @@ export default {
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
+          let classList = {
+            income: [],
+            cost: [],
+          }
+          res.classList.forEach(item => {
+            classList[item.typeIsIncome ? 'income' : 'cost'].push(item);
+          });
+          classList.income =  classList.income.sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
+          classList.cost =  classList.cost.sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
           _this.$store.commit('reloadClassAndRecord', {
-            classList: res.classList,
+            classList: classList,
             recordList: res.recordList,
           });
           _this.$store.commit('reloadAccount', {

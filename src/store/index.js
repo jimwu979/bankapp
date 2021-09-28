@@ -2,7 +2,10 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    classList: [],
+    classList: {
+      income: [],
+      cost: [],
+    },
     recordList: [],
     selectMonth: {
       year: 0,
@@ -13,18 +16,6 @@ export default createStore({
       email: '',
       photo: '',
     }
-  },
-  getters: {
-    classIncome(state){
-      return state.classList.filter(function(item){
-        return item.typeIsIncome == true;
-      });
-    },
-    classCost(state){
-      return state.classList.filter(function(item){
-        return item.typeIsIncome == false;
-      });
-    },
   },
   mutations: {
     resetName(state, payload){
@@ -42,7 +33,8 @@ export default createStore({
       state.account.photo = payload.photo;
     },
     reloadClassAndRecord(state, payload){
-      state.classList = payload.classList;
+      state.classList.income = payload.classList.income;
+      state.classList.cost = payload.classList.cost;
       state.recordList = payload.recordList;
     },
     selectMonth(state, payload){

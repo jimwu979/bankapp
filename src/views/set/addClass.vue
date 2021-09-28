@@ -106,7 +106,10 @@ export default {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(){
           if(xhr.readyState === 4 && xhr.status === 200){
-            if(JSON.parse(xhr.response).isSuccess) _this.back();
+            if(JSON.parse(xhr.response).isSuccess){
+              _this.$store.commit('reloadClass');
+              _this.back();
+            } 
           }
         };
         xhr.open('post', '/api/createClass', false);

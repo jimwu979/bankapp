@@ -32,6 +32,53 @@ export default createStore({
       state.account.email = payload.email;
       state.account.photo = payload.photo;
     },
+    resetClassOrder(state, payload){
+      let siblingIndex = payload.itemIndex + (payload.directionIsTop ? -1 : 1);
+      let list = state.classList[payload.isIncome ? 'income' : 'cost'];
+      [list[payload.itemIndex].order, list[siblingIndex].order] = [list[siblingIndex].order, list[payload.itemIndex].order];
+      [list[payload.itemIndex], list[siblingIndex]] = [list[siblingIndex], list[payload.itemIndex]];
+      let res = false;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          res = JSON.parse(xhr.response).isSuccess;
+        }
+      };
+      xhr.open('post', '/api/updateClass', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        targetClass: {
+          order: list[siblingIndex].order, 
+          _id: list[siblingIndex]._id
+        },
+        siblingClass: {
+          order: list[payload.itemIndex].order, 
+          _id: list[payload.itemIndex]._id
+        },
+      }));
+    },
+    reloadClass(state){
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          let res = JSON.parse(xhr.response);
+          state.classList.income =  res.filter(x=>x.typeIsIncome).sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
+          state.classList.cost =  res.filter(x=>!x.typeIsIncome).sort(function (a, b) {
+            return a.order > b.order ? 1 : -1;
+          });
+        }
+      };
+      xhr.open('post', '/api/readClass', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+      }));
+    },
     initStore(state, payload){
 
       // selectMonth

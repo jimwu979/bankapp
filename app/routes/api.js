@@ -166,7 +166,6 @@ router.post('/getAccount', function(req, res, next){
     'email': req.body.email,
     'loginCodeName': req.body.loginCodeName,
   }, function(err, data){
-    console.log(data);
     res.send(data);
   });
 })

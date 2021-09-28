@@ -6,13 +6,13 @@
           <cssIcon_hamburger></cssIcon_hamburger>
         </div>
         <div class="center">
-          <monthlyCalendar @selectOtherMonth="switchMonth" :parentYear="selectYear" :parentMonth="selectMonth"></monthlyCalendar>
+          <monthlyCalendar @selectOtherMonth="switchMonth" :parentYear="selectMonth.year" :parentMonth="selectMonth.month"></monthlyCalendar>
         </div>
       </div>
     </header>
     <main>
       <div class="container">
-        <div v-if="selectYear==today.year && selectMonth==today.month" class="dashboard board">
+        <div v-if="selectMonth.year==today.year && selectMonth.month==today.month" class="dashboard board">
           <div :class="averageBalanceMode">
             <span>日均餘額</span>
             <span>{{ dashboard.averageBalance }}</span>
@@ -26,12 +26,12 @@
         </div>
         <div v-else class="total board">
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: selectYear, month: selectMonth, isIncome: true}}">
+            :to="{ path: '/statistics', query: { year: selectMonth.year, month: selectMonth.month, isIncome: true}}">
             <span>收入</span>
             <span>{{ total.income }}</span>
           </router-link>
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: selectYear, month: selectMonth, isIncome: false}}">
+            :to="{ path: '/statistics', query: { year: selectMonth.year, month: selectMonth.month, isIncome: false}}">
             <span>支出</span>
             <span>{{ total.cost }}</span>
           </router-link>
@@ -42,7 +42,7 @@
         </div>
         <div class="day board" v-for="(day, day_index) in costList" v-show="day.length > 0" :key="day_index">
           <div class="title">
-            <div>{{selectMonth}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
+            <div>{{selectMonth.month}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
             <div>收支: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
@@ -115,6 +115,9 @@ export default {
     this.init();
   },
   computed: {
+    selectMonth(){
+      return this.$store.state.selectMonth;
+    },
     averageBalanceMode(){
       let averageBalanceStatus = '';
       if(this.dashboard.averageBalance > 600){ 
@@ -220,31 +223,18 @@ export default {
 
       // 載入帳目資料
       let _this = this;
-      let xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4 && xhr.status === 200){
-          let res = JSON.parse(xhr.response);
-          _this.classList = res.classList;
-          res.record.forEach(function(item){
-            let classItem = _this.classList.filter(function(_class){
-              return _class._id == item.classId;
-            });
-            item.iconColor = classItem[0].iconColor;
-            item.iconImg = classItem[0].iconImg;
-            item.className = classItem[0].className;
-            item.value = (item.typeIsIncome) ? item.value : item.value * -1;
-            _this.costList[item.day - 1].push(item);
-          });
-        }
-      };
-      xhr.open('post', '/api/readRecord_aMonth', false);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      xhr.send(JSON.stringify({
-        email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
-        year: this.selectYear,
-        month: this.selectMonth,
-      }));
+      let classList = this.$store.state.classList;
+      this.classList = classList.income.concat(classList.cost);
+      this.$store.state.recordList.forEach(function(item){
+        let classItem = _this.classList.filter(function(_class){
+          return _class._id == item.classId;
+        });
+        item.iconColor = classItem[0].iconColor;
+        item.iconImg = classItem[0].iconImg;
+        item.className = classItem[0].className;
+        item.value = (item.typeIsIncome) ? item.value : item.value * -1;
+        _this.costList[item.day - 1].push(item);
+      });
     },
   },
 }

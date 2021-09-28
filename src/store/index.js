@@ -80,6 +80,7 @@ export default createStore({
       }));
     },
     initStore(state, payload){
+      console.log('initStore start');
 
       // selectMonth
       let date = new Date();
@@ -92,6 +93,8 @@ export default createStore({
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
+          
+          // classList
           res.classList.forEach(item => {
             state.classList[item.typeIsIncome ? 'income' : 'cost'].push(item);
           });
@@ -101,6 +104,11 @@ export default createStore({
           state.classList.cost =  state.classList.cost.sort(function (a, b) {
             return a.order > b.order ? 1 : -1;
           });
+
+          // recordList
+          state.recordList = res.recordList;
+
+          // account
           state.account.name = res.name;
           state.account.email = res.email;
           state.account.photo = res.photo.length > 0 ? '/photo/' + res.photo : '';
@@ -114,6 +122,8 @@ export default createStore({
         year: state.selectMonth.year,
         month: state.selectMonth.month,
       }));      
+      console.log();
+      console.log('initStore end');
     },
     selectMonth(state, payload){
       state.selectMonth.year = payload.year;

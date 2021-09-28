@@ -42,11 +42,13 @@ export default {
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
-          _this.$store.commit('reloadAccount', {
-            name: res.name,
-            email: res.email,
-            photo: res.photo.length > 0 ? '/photo/' + res.photo : '',
-          });
+          if(res !== null){
+            _this.$store.commit('reloadAccount', {
+              name: res.name,
+              email: res.email,
+              photo: res.photo.length > 0 ? '/photo/' + res.photo : '',
+            });
+          }
         }
       };
       xhr.open('post', '/api/getAccount', false);
@@ -78,7 +80,7 @@ export default {
           _this.$store.commit('reloadAccount', {
             name: res.name,
             email: res.email,
-            photo: res.photo,
+            photo: res.photo.length > 0 ? '/photo/' + res.photo : '',
           });
         }
       };

@@ -17,7 +17,7 @@
       <div class="container">
         <div class="board">
           <div class="photo">
-            <div :style="{'background-image': 'url('+ img.val +')'}">
+            <div :style="{'background-image': 'url('+ storeAccount.photo +')'}">
               <input id="uploadImage" type="file" name="file" @change="uploadImg">
               <label for="uploadImage">
                 <div>
@@ -29,11 +29,11 @@
           <ol>
             <li>
               <div>姓名</div>
-              <div @click="openLightbox('name')">{{ name }}</div>
+              <div @click="openLightbox('name')">{{ storeAccount.name }}</div>
             </li>
             <li>
               <div>信箱</div>
-              <div @click="openLightbox('email')">{{ email }}</div>
+              <div @click="openLightbox('email')">{{ storeAccount.email }}</div>
             </li>
           </ol>
           <div @click="openLightbox('password')">修改密碼</div>
@@ -147,23 +147,10 @@ export default {
       }
     }
   },
-  created() {
-    let _this = this;
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        let res = JSON.parse(xhr.response);
-       _this.name = res.name;
-       _this.email = res.email;
-       if(res.photo.length > 0) _this.img.val = '/photo/' + res.photo;
-      }
-    };
-    xhr.open('post', '/api/getAccount', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-    }));
+  computed: {
+    storeAccount(){
+      return this.$store.state.account;
+    },
   },
   methods: {
     uploadImg(){
@@ -188,8 +175,7 @@ export default {
           let xhr = new XMLHttpRequest();
           xhr.onreadystatechange = function(){
             if(xhr.readyState === 4 && xhr.status === 200){
-              let res = JSON.parse(xhr.response);
-              console.log(res);
+              _this.$store.commit('resetPhoto', '/photo/' + JSON.parse(xhr.response).fileName);
             }
           };
           xhr.open('post', '/album/upload', false);
@@ -201,22 +187,54 @@ export default {
       switch (resetItem) {
         case 'name':
           let resetName = this.lightbox.resetName;
-          if(resetName.val.length > 0){
-            this.name = resetName.val;
+          if(resetName.val.length == 0){
+            resetName.showErrorMessage = true;
+          } else {
+            let _this = this;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+              if(xhr.readyState === 4 && xhr.status === 200){
+                if(JSON.parse(xhr.response).isSuccess){
+                  _this.$store.commit('resetName', resetName.val);
+                }
+              }
+            };
+            xhr.open('post', '/api/resetName', false);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(JSON.stringify({
+              email: localStorage.getItem('email'),
+              loginCodeName: localStorage.getItem('loginCodeName'),
+              newName: resetName.val,
+            }));
             this.closeLightbox();
             resetName.showErrorMessage = false;
-          } else {
-            resetName.showErrorMessage = true;
           }
           break;
         case 'email':
           let resetEmail = this.lightbox.resetEmail;
-          if(resetEmail.val.length > 0){
-            this.email = resetEmail.val;
+          if(resetEmail.val.length == 0){
+            resetEmail.showErrorMessage = true;
+          } else {
+            // this.email = resetEmail.val;
+            let _this = this;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+              if(xhr.readyState === 4 && xhr.status === 200){
+                if(JSON.parse(xhr.response).isSuccess){
+                  _this.$store.commit('resetEmail', resetEmail.val);
+                  localStorage.setItem('email', resetEmail.val);
+                }
+              }
+            };
+            xhr.open('post', '/api/resetEmail', false);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(JSON.stringify({
+              email: localStorage.getItem('email'),
+              loginCodeName: localStorage.getItem('loginCodeName'),
+              newEmail: resetEmail.val,
+            }));
             this.closeLightbox();
             resetEmail.showErrorMessage = false;
-          } else {
-            resetEmail.showErrorMessage = true;
           }
           break;
         case 'password':
@@ -259,11 +277,13 @@ export default {
           this.lightbox.resetImg.isOpen = true;
           break;
         case 'name':
-          this.lightbox.resetName.val = this.name;
+          // this.lightbox.resetName.val = this.name;
+          this.lightbox.resetName.val = this.$store.state.account.name;
           this.lightbox.resetName.isOpen = true;
           break;
         case 'email':
-          this.lightbox.resetEmail.val = this.email;
+          // this.lightbox.resetEmail.val = this.email;
+          this.lightbox.resetEmail.val = this.$store.state.account.email;
           this.lightbox.resetEmail.isOpen = true;
           break;
         case 'password':

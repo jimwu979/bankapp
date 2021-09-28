@@ -94,6 +94,53 @@ router.post('/logout', function(req, res, next) {
   });
 });
 
+// 重設名字
+router.post('/resetName', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      accountModel.updateOne(
+        {email: req.body.email}, 
+        {name: req.body.newName}, 
+        function(err, data){
+          res.send({isSuccess: true});
+      });
+    }
+  });
+});
+
+// 重設信箱
+router.post('/resetEmail', function(req, res, next) {
+  accountModel.findOne({
+    email: req.body.email,
+    loginCodeName: req.body.loginCodeName,
+  }, function(err, accountData){
+    if(accountData !== null){
+      accountModel.updateOne(
+        {email: req.body.email}, 
+        {email: req.body.newEmail}, 
+        function(err, data){
+          // res.send({isSuccess: true});
+      });
+      classModel.updateOne(
+        {account: req.body.email}, 
+        {account: req.body.newEmail}, 
+        function(err, data){
+          // res.send({isSuccess: true});
+      });
+      recordModel.updateOne(
+        {account: req.body.email}, 
+        {account: req.body.newEmail}, 
+        function(err, data){
+          // res.send({isSuccess: true});
+      });
+      res.send({isSuccess: true});
+    }
+  });
+});
+
 // 重設密碼
 router.post('/resetPassword', function(req, res, next) {
   let oldPassword = crypto.createHash("md5").update(req.body.oldPassword).digest("hex");
@@ -119,6 +166,7 @@ router.post('/getAccount', function(req, res, next){
     'email': req.body.email,
     'loginCodeName': req.body.loginCodeName,
   }, function(err, data){
+    console.log(data);
     res.send(data);
   });
 })

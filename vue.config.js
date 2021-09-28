@@ -22,6 +22,18 @@ module.exports = {
                 changeOrigin: true, 
                 ws: true 
             },
+            '/api/resetName': { 
+                target: 'http://localhost:3000/api/resetName', 
+                pathRewrite: {  '^/api/resetName': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
+            '/api/resetEmail': { 
+                target: 'http://localhost:3000/api/resetEmail', 
+                pathRewrite: {  '^/api/resetEmail': '' }, 
+                changeOrigin: true, 
+                ws: true 
+            }, 
             '/api/resetPassword': { 
                 target: 'http://localhost:3000/api/resetPassword', 
                 pathRewrite: {  '^/api/resetPassword': '' }, 

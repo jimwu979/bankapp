@@ -27,6 +27,15 @@ export default createStore({
     },
   },
   mutations: {
+    resetName(state, payload){
+      state.account.name = payload;
+    },
+    resetEmail(state, payload){
+      state.account.email = payload;
+    },
+    resetPhoto(state, payload){
+      state.account.photo = payload;
+    },
     reloadAccount(state, payload){
       state.account.name = payload.name;
       state.account.email = payload.email;

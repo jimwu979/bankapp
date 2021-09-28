@@ -24,7 +24,7 @@ router.post('/upload', upload.single('file'), function(req, res, next){
                 { email: req.body.email, },
                 { photo: req.file.filename }, 
                 function(err, data){
-                    res.send({isSuccess: true});
+                    res.send({isSuccess: true, fileName: req.file.filename});
             });
         }
     });

@@ -169,6 +169,38 @@ export default createStore({
         recordId: payload,
       }));
     },
+    updateRecord(state, payload){
+      payload.email = localStorage.getItem('email');
+      payload.loginCodeName = localStorage.getItem('loginCodeName');
+      let _this = this;
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          let res = xhr.response;
+          if(payload.year  == state.selectMonth.year && 
+             payload.month == state.selectMonth.month
+          ){
+            if( payload.isNew){ 
+              _this.commit('reloadRecord');
+            }else{
+              let recordIndex = state.recordList.findIndex(item => {
+                return item._id == payload.recordId;
+              });
+              state.recordList[recordIndex].typeIsIncome = payload.typeIsIncome;
+              state.recordList[recordIndex].description = payload.description;
+              state.recordList[recordIndex].value = payload.value;
+              state.recordList[recordIndex].year = payload.year;
+              state.recordList[recordIndex].month = payload.month;
+              state.recordList[recordIndex].day = payload.day;
+              state.recordList[recordIndex].timestamp = payload.timestamp;
+            }
+          }
+        }
+      };
+      xhr.open('post', '/api/'+ (payload.isNew ? 'updateRecord' : 'createRecord'), false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify(payload));
+    }
   },
   actions: {
   },

@@ -19,9 +19,9 @@
     <main>
       <div class="container">
         <ul class="classSelector">
-          <li v-for="(item, index) in _class[type.isIncome ? 'income' : 'cost'].list"
+          <li v-for="(item, index) in classList[type.isIncome ? 'income' : 'cost']"
               :key="index" 
-              :class="{'gray': index !== _class[type.isIncome ? 'income' : 'cost'].selectIndex}"
+              :class="{'gray': index !== classSelectIndex[type.isIncome ? 'income' : 'cost']}"
               @click="selectClass(index)">
             <div class="icon" :class="['icon_'+ item.iconImg, 'color_'+ item.iconColor]"></div>
             <span>{{ item.className }}</span>
@@ -104,20 +104,14 @@ export default {
   },
   data() {
     return {
-      recordId: '',
+      // recordId: '',
       type: {
         isIncome: false,
         selectorIsOpen: false,
       },
-      _class: {
-        income: {
-          list: [],
-          selectIndex: null
-        },
-        cost: {
-          list: [],
-          selectIndex: null
-        }
+      classSelectIndex: {
+        income: null,
+        cost: null
       },
       form: {
         isOpen: false,
@@ -145,72 +139,51 @@ export default {
       calendarIsOpen: false
     }
   },
+  computed: {
+    classList(){
+      return this.$store.state.classList;
+    },
+    recordId(){
+      return this.$route.query.id;
+    },
+    record(){
+      return this.$store.state.recordList.find(item => {
+        return item._id == this.recordId;
+      });
+    },
+    today(){
+      let date = new Date();
+      return {
+        year:   date.getFullYear(),
+        month:  date.getMonth() + 1,
+        day:    date.getDate(),
+        // dayOfTheWeek: date.getDay()
+      }
+    },
+  },
   beforeMount(){
+    
     // 初始化日期
     this.form.date = {
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
+      year: this.recordId ? this.record.year : this.today.year,
+      month: this.recordId ? this.record.month : this.today.month,
+      day: this.recordId ? this.record.day : this.today.day,
     }
-      
-    // 載入收支類別
-    let res;
-    let xhrClass = new XMLHttpRequest();
-    xhrClass.onreadystatechange = function(){
-      if(xhrClass.readyState === 4 && xhrClass.status === 200){
-        res = JSON.parse(xhrClass.response);
-      }
-    };
-    xhrClass.open('post', '/api/readClass', false);
-    xhrClass.setRequestHeader('Content-type', 'application/json');
-    xhrClass.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-    }));
-    res.forEach(item => {
-      this._class[item.typeIsIncome ? 'income' : 'cost'].list.push(item);
-    });
-    this._class['income'].list = this._class['income'].list.sort(function (a, b) {
-      return a.order > b.order ? 1 : -1;
-    });
-    this._class['cost'].list = this._class['cost'].list.sort(function (a, b) {
-      return a.order > b.order ? 1 : -1;
-    });
-
     // 修改帳目
-    if(this.$route.query.id){
-      let id = this.$route.query.id;
+    if(this.recordId){
+      let id = this.recordId;
       this.recordId = id;
+      this.type.isIncome = this.record.typeIsIncome;
+      this.form.description.value = this.record.description;
+      this.form.recordNumber.value = this.record.value.toString();
+      this.form.isOpen = true;
+      this.timestamp = this.record.timestamp;
       let _this = this;
-      let xhrRecord = new XMLHttpRequest();
-      xhrRecord.onreadystatechange = function(){
-        if(xhrRecord.readyState === 4 && xhrRecord.status === 200){
-          let res = JSON.parse(xhrRecord.response);
-          _this.type.isIncome = res.typeIsIncome;
-          _this.form.description.value = res.description;
-          _this.form.date = {
-            year: res.year,
-            month: res.month,
-            day: res.day,
-          }
-          _this.form.recordNumber.value = res.value.toString();
-          _this.form.isOpen = true;
-          _this.timestamp = res.timestamp;
-          let classOrder = _this._class[res.typeIsIncome?'income':'cost'].list.filter(function(value){
-            return res.classId == value._id;
-          })[0].order;
-          _this._class[res.typeIsIncome?'income':'cost'].selectIndex = classOrder;
-        }
-      };
-      xhrRecord.open('post', '/api/readRecord_findOne', false);
-      xhrRecord.setRequestHeader('Content-type', 'application/json');
-      xhrRecord.send(JSON.stringify({
-        email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
-        id: id
-      }));
-    } 
-    
+      let classOrder = this.classList[this.record.typeIsIncome?'income':'cost'].filter(function(item){
+        return _this.record.classId == item._id;
+      })[0].order;
+      this.classSelectIndex[this.record.typeIsIncome?'income':'cost'] = classOrder;
+    }
   },
   mounted() {
     this.mounted = true;
@@ -275,15 +248,6 @@ export default {
     },
 
     //other
-    today(){
-      let today = new Date();
-      return {
-        year:   today.getFullYear(),
-        month:  today.getMonth() + 1,
-        day:    today.getDate(),
-        // dayOfTheWeek: today.getDay()
-      }
-    },
     toggleTypeMenu(toggleDirection){
       if(toggleDirection !== undefined){
         this.type.selectorIsOpen = toggleDirection;
@@ -296,7 +260,7 @@ export default {
       this.type.selectorIsOpen = false;
     },
     selectClass(selectIndex){
-      this._class[this.type.isIncome ? 'income' : 'cost'].selectIndex = selectIndex;
+      this.classSelectIndex[this.type.isIncome ? 'income' : 'cost'] = selectIndex;
       this.form.isOpen = true;
       this.type.selectorIsOpen = false;
     },
@@ -311,60 +275,19 @@ export default {
       router.go(-1);
     },
     submit(){
-      if(this.$route.query.id){
-        // 更新帳目
-        let _this = this;
-        this.timestamp.push(new Date())
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-          if(xhr.readyState === 4 && xhr.status === 200){
-            if(JSON.parse(xhr.response).isSuccess) _this.back();
-          }
-        };
-        xhr.open('post', '/api/updateRecord', false);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        let _class = this._class[this.type.isIncome ? 'income' : 'cost'];
-        xhr.send(JSON.stringify({
-          email: localStorage.getItem('email'),
-          loginCodeName: localStorage.getItem('loginCodeName'),
-          recordId: this.$route.query.id,
-          classId: _class.list[_class.selectIndex]._id,
+      this.$store.commit('updateRecord', {
+          isNew: this.recordId ? true : false,
+          recordId: this.recordId ? this.recordId : null,
+          classId: this.$store.state.classList[this.type.isIncome?'income':'cost'][this.classSelectIndex[this.type.isIncome?'income':'cost']],
           typeIsIncome: this.type.isIncome,
           description: this.form.description.value,
           value: Number(this.form.recordNumber.value),
-          // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
           year: this.form.date.year,
           month: this.form.date.month,
           day: this.form.date.day,
           timestamp: this.timestamp,
-        }));
-      } else {
-        // 新增帳目
-        let _this = this;
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-          if(xhr.readyState === 4 && xhr.status === 200){
-            if(JSON.parse(xhr.response).isSuccess) _this.back();
-          }
-        };
-        xhr.open('post', '/api/createRecord', false);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        let _class = this._class[this.type.isIncome ? 'income' : 'cost'];
-        xhr.send(JSON.stringify({
-          email: localStorage.getItem('email'),
-          loginCodeName: localStorage.getItem('loginCodeName'),
-          classId: _class.list[_class.selectIndex]._id,
-          typeIsIncome: this.type.isIncome,
-          description: this.form.description.value,
-          value: Number(this.form.recordNumber.value),
-          // time: new Date(this.form.date.year, this.form.date.month - 1, this.form.date.day),
-          year: this.form.date.year,
-          month: this.form.date.month,
-          day: this.form.date.day,
-          timestamp: new Date(),
-        }));        
-      }
-
+      });       
+      this.back();
     },
   },
 }

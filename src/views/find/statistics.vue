@@ -22,8 +22,6 @@
               :to="{
                 path: 'classDetail', 
                 query: { 
-                  year: $store.state.selectMonth.year, 
-                  month: $store.state.selectMonth.month, 
                   isIncome: isIncome, 
                   classId: item.classId,
                   className: item.className,

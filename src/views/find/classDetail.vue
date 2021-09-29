@@ -15,7 +15,7 @@
     <main>
       <div class="container">
         <div class="board">
-          <h2>{{ IncomeOrCost }}列表</h2>
+          <h2>{{ isIncome ? '收入' : '支出' }}列表</h2>
           <div class="list">
             <router-link v-clickStyle v-for="(item, index) in recordList"
               :to="{ path: 'recordDetail', query: { id: item._id}}">
@@ -50,8 +50,6 @@ export default {
   },
   data() {
     return {
-      year: this.$route.query.year,
-      month: this.$route.query.month,
       className: this.$route.query.className,
       iconImg: this.$route.query.iconImg,
       iconColor: this.$route.query.iconColor,
@@ -59,31 +57,12 @@ export default {
       isIncome: JSON.parse(this.$route.query.isIncome),
     }
   },
-  created(){
-    let _this = this;
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4 && xhr.status === 200){
-        let res = JSON.parse(xhr.response);
-        res.sort((a, b) => {
-          return b.value - a.value;
-        })
-        _this.recordList = res;
-      }
-    };
-    xhr.open('post', '/api/readRecord_aClasswithinAMonth', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-      classId: this.$route.query.classId,
-      year: this.year,
-      month: this.month,
-    }));
-  },
   computed: {
-    IncomeOrCost(){
-      return this.isIncome ? '收入' : '支出';
+    year(){
+      return this.$store.state.selectMonth.year;
+    },
+    month(){
+      return this.$store.state.selectMonth.month;
     },
     totalCost(){
       let totalCost = 0;
@@ -101,6 +80,14 @@ export default {
       });
       return costPercentage;
     },
+  },
+  created(){
+    this.recordList = this.$store.state.recordList.filter((item) => {
+      return item.classId == this.$route.query.classId;
+    });
+    this.recordList.sort((a, b) => {
+      return b.value - a.value;
+    });
   },
   methods: {
     back(){

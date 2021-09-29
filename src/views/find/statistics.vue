@@ -6,8 +6,7 @@
           <cssIcon_arrowLeft></cssIcon_arrowLeft>
         </div>
         <div class="center">
-          <monthlyCalendar @selectOtherMonth="selectOtherMonth"
-           :parentYear="year" :parentMonth="month"></monthlyCalendar>
+          <monthlyCalendar @selectOtherMonth="init"></monthlyCalendar>
         </div>
       </div>
     </header>
@@ -23,8 +22,8 @@
               :to="{
                 path: 'classDetail', 
                 query: { 
-                  year: year, 
-                  month: month, 
+                  year: $store.state.selectMonth.year, 
+                  month: $store.state.selectMonth.month, 
                   isIncome: isIncome, 
                   classId: item.classId,
                   className: item.className,
@@ -65,8 +64,6 @@ export default {
       statisticsList: [
         // { id: 'zxc123', class: '正餐', icon: 0, color: 0, number: 2000 },
       ],
-      year: 0,
-      month: 0,
       isIncome: false,
     }
   },
@@ -95,9 +92,7 @@ export default {
   methods: {
     init(){
       let routeQuery = this.$route.query;
-      this.isIncome = routeQuery.isIncome? JSON.parse(routeQuery.isIncome) : this.isIncome;
-      this.year     = this.$store.state.selectMonth.year;
-      this.month    = this.$store.state.selectMonth.month;
+      if(routeQuery.isIncome) this.isIncome = JSON.parse(routeQuery.isIncome);
       let _this = this;
       let storeClassList = this.$store.state.classList;
       this.classList = storeClassList.income.concat(storeClassList.cost).filter(item => {
@@ -123,12 +118,6 @@ export default {
       _this.statisticsList.sort((a, b) => {
         return b.number - a.number;
       });
-    },
-    selectOtherMonth(time){
-      // router.push('/statistics?year='+ time.selectYear +'&&month='+ time.selectMonth);
-      // setTimeout(()=>{
-      //   this.init();
-      // }, 0);
     },
     back(){
       router.go(-1);

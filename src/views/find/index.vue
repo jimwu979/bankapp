@@ -6,13 +6,15 @@
           <cssIcon_hamburger></cssIcon_hamburger>
         </div>
         <div class="center">
-          <monthlyCalendar @selectOtherMonth="switchMonth" :parentYear="selectMonth.year" :parentMonth="selectMonth.month"></monthlyCalendar>
+          <monthlyCalendar @selectOtherMonth="init"></monthlyCalendar>
         </div>
       </div>
     </header>
     <main>
       <div class="container">
-        <div v-if="selectMonth.year==today.year && selectMonth.month==today.month" class="dashboard board">
+        <div v-if="$store.state.selectMonth.year==today.year && 
+                   $store.state.selectMonth.month==today.month" 
+             class="dashboard board">
           <div :class="averageBalanceMode">
             <span>日均餘額</span>
             <span>{{ dashboard.averageBalance }}</span>
@@ -26,12 +28,12 @@
         </div>
         <div v-else class="total board">
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: selectMonth.year, month: selectMonth.month, isIncome: true}}">
+            :to="{ path: '/statistics', query: { isIncome: true }}">
             <span>收入</span>
             <span>{{ total.income }}</span>
           </router-link>
           <router-link class="totalType"
-            :to="{ path: '/statistics', query: { year: selectMonth.year, month: selectMonth.month, isIncome: false}}">
+            :to="{ path: '/statistics', query: { isIncome: false }}">
             <span>支出</span>
             <span>{{ total.cost }}</span>
           </router-link>
@@ -42,7 +44,7 @@
         </div>
         <div class="day board" v-for="(day, day_index) in costList" v-show="day.length > 0" :key="day_index">
           <div class="title">
-            <div>{{selectMonth.month}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
+            <div>{{$store.state.selectMonth.month}}/{{ day_index + 1 }} 週{{ dayOfTheWeek[day_index] }}</div>
             <div>收支: <span>{{dailyCost[day_index]}}</span></div>
           </div>
           <div class="cost_list">
@@ -94,8 +96,6 @@ export default {
         //   day: 2 
         // },
       ],
-      selectYear: 0,
-      selectMonth: 0,
       CalendarIsOpen: false,
       clickItemsIndex: [null, null],
       today: {
@@ -110,8 +110,6 @@ export default {
     this.today.year = date.getFullYear();
     this.today.month = date.getMonth() + 1;
     this.today.day = date.getDate();
-    this.selectYear = (this.$route.query.year !== undefined) ? Number(this.$route.query.year) : new Date().getFullYear();
-    this.selectMonth = (this.$route.query.month !== undefined) ? Number(this.$route.query.month) : new Date().getMonth() + 1;
     this.init();
   },
   computed: {
@@ -146,10 +144,9 @@ export default {
       }
       cost = Math.abs(cost);
       let balance = income - cost;
-
-      let date = new Date();
-      let daysLength = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
-      let remainDays = daysLength - date.getDate();
+      let selectMonth = this.$store.state.selectMonth;
+      let daysLength = new Date(selectMonth.year, selectMonth.month, 0).getDate();
+      let remainDays = daysLength - new Date().getDate();
       let averageBalance = (balance / remainDays).toString();
       averageBalance = averageBalance.slice(0, averageBalance.indexOf('.'));
       
@@ -193,12 +190,11 @@ export default {
       return dailyCost;
     },
     dayOfTheWeek(){
-      let year = this.selectYear;
-      let month = this.selectMonth;
-      let numberOfDays = new Date(year, month, 0).getDate();
+      let selectMonth = this.$store.state.selectMonth;
+      let numberOfDays = new Date(selectMonth.year, selectMonth.month, 0).getDate();
       let dayOfTheWeek = [];
       for(let d=1; d<=numberOfDays; d++){
-        let day = new Date(year + '/'+ month +'/' + d).getDay();
+        let day = new Date(selectMonth.year + '/'+ selectMonth.month +'/' + d).getDay();
         dayOfTheWeek.push(['日', '一', '二', '三', '四', '五', '六'][day]);
       }
       return dayOfTheWeek;
@@ -208,15 +204,15 @@ export default {
     openNav(){
       this.$emit('openNav');
     },
-    switchMonth(newTime){
-      this.selectYear = newTime.selectYear;
-      this.selectMonth = newTime.selectMonth;
+    switchMonth(){
       this.init();
     },
     init(){
+      let selectMonth = this.$store.state.selectMonth;
+
       // 初始化 天數
       this.costList = [];
-      let numberOfDays = new Date(this.selectYear, this.selectMonth, 0).getDate();
+      let numberOfDays = new Date(selectMonth.year, selectMonth.month, 0).getDate();
       for(let d = 0; d < numberOfDays; d++){
         this.costList.push([]);
       }

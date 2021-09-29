@@ -4,18 +4,18 @@
         v-clickStyle
         :class="{'mousedown': false, 'open': calendarIsOpen}">
     <div @click="toggleCalendar(false)" v-stopPropagation class="backgroundCover"></div>
-    <span class="headerTitle">{{ selectMonth }}月</span>
+    <span class="headerTitle">{{ selectMonth.month }}月</span>
     <div class="calendar" @click.stop="toggleCalendar()">
       <div class="container">
         <div class="year">
           <div @click.stop="toggleYear(-1)" v-clickStyle></div>
-          <span>{{selectYear}}</span>
+          <span>{{menuYear}}</span>
           <div @click.stop="toggleYear(1)" v-clickStyle></div>
         </div>
         <ol>
           <li v-for="m in 12" 
               :key="m" 
-              :class="{'now': m == selectMonth && selectYear == parentYear}"
+              :class="{'now': m == selectMonth.month && menuYear == selectMonth.year}"
               @click="toggleMonth(m)"
           >{{m}}月</li>
         </ol>
@@ -26,17 +26,19 @@
 <script>
 export default {
   name: 'monthlyCalendar',
-  props: ['parentYear', 'parentMonth'],
   data() {
     return {
       calendarIsOpen: false,
-      selectYear: 0,
-      selectMonth: 0,
+      menuYear: 0,
     }
   },
   created(){
-      this.selectYear = this.parentYear;
-      this.selectMonth = this.parentMonth;
+    this.menuYear = this.selectMonth.year;
+  },
+  computed: {
+    selectMonth(){
+      return this.$store.state.selectMonth;
+    },
   },
   methods: {
     toggleCalendar(toggleDirection){
@@ -48,14 +50,14 @@ export default {
       event.stopPropagation();
     },
     toggleYear(toggleDirection){
-      this.selectYear = this.selectYear + toggleDirection;
+      this.menuYear = this.menuYear + toggleDirection;
     },
     toggleMonth(selectMonth){
-      this.selectMonth = selectMonth;
-      this.$emit('selectOtherMonth', {
-          selectYear: this.selectYear, 
-          selectMonth: this.selectMonth
+      this.$store.commit('selectMonth', {
+          year: this.menuYear, 
+          month: selectMonth,
       });
+      this.$emit('selectOtherMonth');
       this.toggleCalendar();
     },
   },

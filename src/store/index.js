@@ -80,8 +80,6 @@ export default createStore({
       }));
     },
     initStore(state, payload){
-      console.log('initStore start');
-
       // selectMonth
       let date = new Date();
       state.selectMonth.year = date.getFullYear();
@@ -122,12 +120,27 @@ export default createStore({
         year: state.selectMonth.year,
         month: state.selectMonth.month,
       }));      
-      console.log();
-      console.log('initStore end');
     },
     selectMonth(state, payload){
       state.selectMonth.year = payload.year;
       state.selectMonth.month = payload.month;
+      this.commit('reloadRecord');
+    },
+    reloadRecord(state, payload){
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          state.recordList = JSON.parse(xhr.response).record;
+        }
+      };
+      xhr.open('post', '/api/readRecord_aMonth', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        year: state.selectMonth.year,
+        month: state.selectMonth.month,
+      }));
     },
   },
   actions: {

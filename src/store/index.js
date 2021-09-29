@@ -17,6 +17,12 @@ export default createStore({
       photo: '',
     }
   },
+  getters: {
+    allClass(state){
+      let classList = state.classList;
+      return classList.income.concat(classList.cost);
+    },
+  },
   mutations: {
     resetName(state, payload){
       state.account.name = payload;

@@ -132,7 +132,7 @@ export default createStore({
       state.selectMonth.month = payload.month;
       this.commit('reloadRecord');
     },
-    reloadRecord(state, payload){
+    reloadRecord(state){
       let xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
@@ -146,6 +146,27 @@ export default createStore({
         loginCodeName: localStorage.getItem('loginCodeName'),
         year: state.selectMonth.year,
         month: state.selectMonth.month,
+      }));
+    },
+    deleteRecord(state, payload){
+      let xhr = new XMLHttpRequest();
+      let _this = this;
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          if(JSON.parse(xhr.response).isSuccess){
+            let deleteIndex = state.recordList.findIndex((item)=> {
+              return item._id == payload;
+            });
+            state.recordList.splice(deleteIndex, 1);
+          }
+        }
+      };
+      xhr.open('post', '/api/deleteRecord', false);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send(JSON.stringify({
+        email: localStorage.getItem('email'),
+        loginCodeName: localStorage.getItem('loginCodeName'),
+        recordId: payload,
       }));
     },
   },

@@ -8,7 +8,7 @@
         <div class="center">
           詳情
         </div>
-        <div class="right" v-clickStyle @click="openLightbox">
+        <div class="right" v-clickStyle @click="openLightbox(true)">
           <cssIcon_delete></cssIcon_delete>
         </div>
       </div>
@@ -18,29 +18,29 @@
         <div class="board">
           <div class="title">
             <div class="iconBox">
-              <div class="icon" :class="['icon_' + iconImg, 'color_' + iconColor]"></div>
+              <div class="icon" :class="['icon_' + targetClass.iconImg, 'color_' + targetClass.iconColor]"></div>
             </div>
-            <h2>{{ className }}</h2>
+            <h2>{{ targetClass.className }}</h2>
           </div>
           <ul>
             <li>
               <span>收支</span>
-              <span>{{ isIncome?'收入':'支出' }}</span>
+              <span>{{ targetRecord.typeIsIncome?'收入':'支出' }}</span>
             </li>
             <li>
               <span>金額</span>
-              <span>{{ number }}</span>
+              <span>{{ targetRecord.value }}</span>
             </li>
             <li>
               <span>日期</span>
-              <span>{{ year }}/{{ month }}/{{ day }} 週{{ dayOfTheWeek }}</span>
+              <span>{{ targetRecord.year }}/{{ targetRecord.month }}/{{ targetRecord.day }} 週{{ dayOfTheWeek }}</span>
             </li>
             <li>
               <span>備註</span>
-              <span>{{ description }}</span>
+              <span>{{ targetRecord.description }}</span>
             </li>
           </ul>
-          <router-link :to="{path: 'addRecord', query: {id: $route.query.id}}">
+          <router-link :to="{path: 'addRecord', query: {id: recordId}}">
             <div class="cssIcon">
               <cssIcon_edit></cssIcon_edit>
             </div>
@@ -53,7 +53,7 @@
         <h3>刪除</h3>
         <p>你確定要刪除這筆交易嗎?</p>
         <div>
-          <div class="btn" @click="closeLightbox">取消</div>
+          <div class="btn" @click="openLightbox(false)">取消</div>
           <div class="btn" @click="deleteRecord">確定</div>
         </div>
       </div>
@@ -75,66 +75,8 @@ export default {
   },
   data() {
     return {
-      classList: [],
-      className: '正餐',
-      classId: '',
-      isIncome: false,
-      iconImg: 0,
-      iconColor: -0,
-      description: '',
-      number: 0,
-      year: 0,
-      month: 0,
-      day: 0,
       lightboxIsOpen: false,
     }
-  },
-  beforeMount() {
-    // 載入收支類別
-    let _this = this;
-    let xhrClass = new XMLHttpRequest();
-    xhrClass.onreadystatechange = function(){
-      if(xhrClass.readyState === 4 && xhrClass.status === 200){
-        _this.classList = JSON.parse(xhrClass.response);
-      }
-    };
-    xhrClass.open('post', '/api/readClass', false);
-    xhrClass.setRequestHeader('Content-type', 'application/json');
-    xhrClass.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-    }));
-
-    // 載入帳目資料
-    let xhrRecord = new XMLHttpRequest();
-    xhrRecord.onreadystatechange = function(){
-      if(xhrRecord.readyState === 4 && xhrRecord.status === 200){
-        let res = JSON.parse(xhrRecord.response);
-        _this.isIncome = res.isIncome;
-        _this.class = res.className;
-        _this.classId = res.classId;
-        _this.description = res.description;
-        _this.number = res.value;
-        _this.year = res.year;
-        _this.month = res.month;
-        _this.day = res.day;
-      }
-    };
-    xhrRecord.open('post', '/api/readRecord_findOne', false);
-    xhrRecord.setRequestHeader('Content-type', 'application/json');
-    xhrRecord.send(JSON.stringify({
-      email: localStorage.getItem('email'),
-      loginCodeName: localStorage.getItem('loginCodeName'),
-      id: this.$route.query.id,
-    }));
-
-    // 顯示收支類別
-    let _class = this.classList.filter(function(item){
-      return item._id == _this.classId;
-    })[0];
-    this.className = _class.className;
-    this.iconImg = _class.iconImg;
-    this.iconColor = _class.iconColor;
   },
   computed: {
     dayOfTheWeek(){
@@ -143,31 +85,27 @@ export default {
       dayOfTheWeek = dayOfTheWeekChart[dayOfTheWeek];
       return dayOfTheWeek;
     },
+    recordId(){
+      return this.$route.query.id;
+    },
+    targetRecord(){
+      return this.$store.state.recordList.find(item => {
+        return item._id == this.recordId;
+      })
+    },
+    targetClass(){
+      return this.$store.getters.allClass.find(item => {
+        return item._id == this.targetRecord.classId;
+      });
+    },
   },
   methods: {
-    openLightbox(){
-      this.lightboxIsOpen = true;
-    },
-    closeLightbox(){
-      this.lightboxIsOpen = false;
+    openLightbox(direction){
+      this.lightboxIsOpen = direction;
     },
     deleteRecord(){
-      let xhr = new XMLHttpRequest();
-      let _this = this;
-      xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4 && xhr.status === 200){
-          if(JSON.parse(xhr.response).isSuccess){
-            _this.back();
-          }
-        }
-      };
-      xhr.open('post', '/api/deleteRecord', false);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      xhr.send(JSON.stringify({
-        email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
-        recordId: this.$route.query.id,
-      }));
+      this.$store.commit('deleteRecord', this.recordId);
+      this.back();
     },
     back(){
       router.go(-1);

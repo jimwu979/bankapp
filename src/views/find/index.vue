@@ -148,7 +148,9 @@ export default {
       let daysLength = new Date(selectMonth.year, selectMonth.month, 0).getDate();
       let remainDays = daysLength - new Date().getDate() + 1;
       let averageBalance = (balance / remainDays).toString();
-      averageBalance = averageBalance.slice(0, averageBalance.indexOf('.'));
+      if(averageBalance.indexOf('.') !== -1){
+        averageBalance = averageBalance.slice(0, averageBalance.indexOf('.'));
+      }
       
       return {
         income, // 收入

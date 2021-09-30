@@ -27,7 +27,6 @@ export default {
   created(){
     if(localStorage.getItem('email') && localStorage.getItem('loginCodeName')){
       this.getAccount();
-      this.$store.commit('initStore');
     }
   },
   computed: {
@@ -48,6 +47,7 @@ export default {
               email: res.email,
               photo: res.photo.length > 0 ? '/photo/' + res.photo : '',
             });
+            _this.$store.commit('initStore');
           }
         }
       };

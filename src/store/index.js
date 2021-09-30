@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from '@/router'
 
 export default createStore({
   state: {
@@ -86,6 +87,7 @@ export default createStore({
       }));
     },
     initStore(state, payload){
+      console.log('initStore');
       // selectMonth
       let date = new Date();
       state.selectMonth.year = date.getFullYear();
@@ -97,7 +99,6 @@ export default createStore({
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
-          
           // classList
           res.classList.forEach(item => {
             state.classList[item.typeIsIncome ? 'income' : 'cost'].push(item);

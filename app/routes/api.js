@@ -414,7 +414,7 @@ router.post('/initStore', function(req, res, next){
   accountModel.findOne({
     email: req.body.email,
     loginCodeName: req.body.loginCodeName,
-  }, function(err, accountData){
+  }, function(accountErr, accountData){
     if(accountData !== null){
       resData.name = accountData.name;
       resData.email = accountData.email;
@@ -423,11 +423,11 @@ router.post('/initStore', function(req, res, next){
         account: req.body.email,
         year: req.body.year,
         month: req.body.month,
-      }, function(err, recordData){
+      }, function(recordErr, recordData){
         resData.recordList = recordData;
         classModel.find({
           account: req.body.email,
-        }, function(err, classData){
+        }, function(classErr, classData){
           resData.classList = classData;
           res.send(resData);
         });

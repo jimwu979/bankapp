@@ -63,7 +63,6 @@
 
 <script>
 import router from '@/router'
-import moment from 'moment'
 import cssIcon_arrowLeft from '@/components/public/cssIcon_arrowLeft.vue'
 import cssIcon_delete from '@/components/public/cssIcon_delete.vue'
 import cssIcon_edit from '@/components/public/cssIcon_edit.vue'
@@ -81,8 +80,8 @@ export default {
   computed: {
     dayOfTheWeek(){
       let dayOfTheWeekChart = ['日', '一', '二', '三', '四', '五', '六'];
-      let dayOfTheWeek = moment(this.year + '/' + this.month + '/' + this.day).weekday();
-      dayOfTheWeek = dayOfTheWeekChart[dayOfTheWeek];
+      let date = new Date(this.targetRecord.year, this.targetRecord.month - 1, this.targetRecord.day).getDay();
+      let dayOfTheWeek = dayOfTheWeekChart[date];
       return dayOfTheWeek;
     },
     recordId(){

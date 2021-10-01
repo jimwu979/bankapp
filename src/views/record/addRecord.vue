@@ -278,7 +278,7 @@ export default {
       this.$store.commit('updateRecord', {
           isNew: this.recordId ? false : true,
           recordId: this.recordId ? this.recordId : null,
-          classId: this.$store.state.classList[this.type.isIncome?'income':'cost'][this.classSelectIndex[this.type.isIncome?'income':'cost']],
+          classId: this.$store.state.classList[this.type.isIncome?'income':'cost'][this.classSelectIndex[this.type.isIncome?'income':'cost']]._id,
           typeIsIncome: this.type.isIncome,
           description: this.form.description.value,
           value: Number(this.form.recordNumber.value),

@@ -189,6 +189,7 @@ export default createStore({
               });
               state.recordList[recordIndex].typeIsIncome = payload.typeIsIncome;
               state.recordList[recordIndex].description = payload.description;
+              state.recordList[recordIndex].classId = payload.classId;
               state.recordList[recordIndex].value = payload.value;
               state.recordList[recordIndex].year = payload.year;
               state.recordList[recordIndex].month = payload.month;

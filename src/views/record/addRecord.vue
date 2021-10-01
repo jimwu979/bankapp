@@ -276,7 +276,7 @@ export default {
     },
     submit(){
       this.$store.commit('updateRecord', {
-          isNew: this.recordId ? true : false,
+          isNew: this.recordId ? false : true,
           recordId: this.recordId ? this.recordId : null,
           classId: this.$store.state.classList[this.type.isIncome?'income':'cost'][this.classSelectIndex[this.type.isIncome?'income':'cost']],
           typeIsIncome: this.type.isIncome,

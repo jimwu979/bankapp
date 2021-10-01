@@ -198,7 +198,7 @@ export default createStore({
           }
         }
       };
-      xhr.open('post', '/api/'+ (payload.isNew ? 'updateRecord' : 'createRecord'), false);
+      xhr.open('post', '/api/'+ (payload.isNew ? 'createRecord' : 'updateRecord'), false);
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify(payload));
     }

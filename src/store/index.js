@@ -87,7 +87,6 @@ export default createStore({
       }));
     },
     initStore(state, payload){
-      console.log('initStore');
       // selectMonth
       let date = new Date();
       state.selectMonth.year = date.getFullYear();

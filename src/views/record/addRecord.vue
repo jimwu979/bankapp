@@ -175,7 +175,7 @@ export default {
       this.recordId = id;
       this.type.isIncome = this.record.typeIsIncome;
       this.form.description.value = this.record.description;
-      this.form.recordNumber.value = this.record.value.toString();
+      this.form.recordNumber.value = this.record.typeIsIncome ? this.record.value.toString() : (this.record.value * -1).toString();
       this.form.isOpen = true;
       this.timestamp = this.record.timestamp;
       let _this = this;

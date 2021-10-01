@@ -12,7 +12,7 @@
              v-model="inputmodel[index].val" 
              :type="inputmodel[index]['type']">
     </div>
-    <router-link class="loginbtn" to="/" @click.native.capture="login">登入</router-link>
+    <div class="loginbtn" @click="login">登入</div>
     <router-link class="signUp" to="signUp">註冊會員</router-link>
     <div class="fixbox" :class="{'open': errorMessageIsOpen}">
       <div class="lightbox">
@@ -79,13 +79,13 @@ export default {
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
-          if(res){
+          if(res.isSuccess){
             localStorage.setItem('loginCodeName', res.loginCodeName);
             localStorage.setItem('email', _this.inputmodel[0].val);
             _this.$emit('login');
+            router.push('/');
           } else {
             _this.errorMessageIsOpen = true;
-            event.preventDefault();
           }
         }
       };

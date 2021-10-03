@@ -227,11 +227,13 @@ export default {
         let classItem = _this.classList.filter(function(_class){
           return _class._id == item.classId;
         });
-        item.iconColor = classItem[0].iconColor;
-        item.iconImg = classItem[0].iconImg;
-        item.className = classItem[0].className;
-        item.value = (item.typeIsIncome) ? item.value : item.value * -1;
-        _this.costList[item.day - 1].push(item);
+        if(classItem.length > 0){
+          item.iconColor = classItem[0].iconColor;
+          item.iconImg = classItem[0].iconImg;
+          item.className = classItem[0].className;
+          item.value = (item.typeIsIncome) ? item.value : item.value * -1;
+          _this.costList[item.day - 1].push(item);
+        }
       });
     },
   },

@@ -19,8 +19,9 @@
         <div class="listbox">
           <div>
             <div class="olbox">
-              <ol :style="{'height': $store.state.classList.cost.length * listItemHeight + 'px'}">
-                <li v-for="(item, index) in $store.state.classList.cost" :key="index" :ref="`li${index}`" 
+              <ol :style="{'height': ($store.state.classList.cost.length > 0 ? $store.state.classList.cost.length : 1) * listItemHeight + 'px'}">
+                <li v-if="$store.state.classList.cost.length == 0" :ref="`nullClassTag`">尚未建立支出類別</li>
+                <li v-for="(item, index) in $store.state.classList.cost" :key="index" :ref="`firstCostClassLi`"
                     :style="{'top': listItemHeight * index + 'px'}">
                   <div class="delete" @click="deleteClass('cost', item._id)"></div>
                   <div class="icon" :class="['color_' + item.iconColor, 'icon_' + item.iconImg]"></div>
@@ -33,7 +34,8 @@
               </ol>
             </div>
             <div class="olbox">
-              <ol :style="{'height': $store.state.classList.income.length * listItemHeight + 'px'}">
+              <ol :style="{'height': ($store.state.classList.income.length > 0 ? $store.state.classList.income.length : 1) * listItemHeight + 'px'}">
+                <li v-show="$store.state.classList.income.length == 0">尚未建立收入類別</li>
                 <li v-for="(item, index) in $store.state.classList.income" :key="index"
                     :style="{'top': listItemHeight * index + 'px'}">
                   <div class="delete" @click="deleteClass('income', item._id)"></div>
@@ -91,7 +93,8 @@ export default {
     }
   },
   mounted(){
-    this.listItemHeight = this.$refs.li0 ? this.$refs.li0.clientHeight : 0;
+    // this.listItemHeight = this.$refs.li0 ? this.$refs.li0.clientHeight : 0;
+    this.listItemHeight = this.$refs.nullClassTag ? this.$refs.nullClassTag.clientHeight : this.$refs.firstCostClassLi.clientHeight;
   },
   methods: {
     moveToTop(isIncome, directionIsTop, itemIndex){

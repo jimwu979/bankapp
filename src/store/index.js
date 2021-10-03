@@ -93,6 +93,8 @@ export default createStore({
       state.selectMonth.month = date.getMonth() + 1;
 
       // classList && recordList && account
+      state.classList.income = [];
+      state.classList.cost = [];
       let _this = this;
       let xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){

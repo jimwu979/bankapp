@@ -18,7 +18,7 @@ let upload = multer({storage: storage});
 router.post('/upload', upload.single('file'), function(req, res, next){
     accountModel.findOne({
         email: req.body.email,
-        loginCodeName: req.body.loginCodeName,
+        loginCode: req.body.loginCode,
     }, function(err, accountData){
         if(accountData !== null){
             accountModel.updateOne(

@@ -72,7 +72,7 @@ export default {
         xhr.setRequestHeader("Content-type","application/json");
         xhr.send(JSON.stringify({
             email: localStorage.getItem('email'),
-            loginCodeName: localStorage.getItem('loginCodeName'),
+            loginCode: localStorage.getItem('loginCode'),
         }));
         if(this.isAlreadyLogin) router.push('/');
     },

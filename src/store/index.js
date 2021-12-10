@@ -55,7 +55,7 @@ export default createStore({
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
         targetClass: {
           order: list[siblingIndex].order, 
           _id: list[siblingIndex]._id
@@ -83,7 +83,7 @@ export default createStore({
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
       }));
     },
     initStore(state, payload){
@@ -124,7 +124,7 @@ export default createStore({
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
         year: state.selectMonth.year,
         month: state.selectMonth.month,
       }));      
@@ -145,7 +145,7 @@ export default createStore({
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
         year: state.selectMonth.year,
         month: state.selectMonth.month,
       }));
@@ -167,13 +167,13 @@ export default createStore({
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
         recordId: payload,
       }));
     },
     updateRecord(state, payload){
       payload.email = localStorage.getItem('email');
-      payload.loginCodeName = localStorage.getItem('loginCodeName');
+      payload.loginCode = localStorage.getItem('loginCode');
       let _this = this;
       let xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){

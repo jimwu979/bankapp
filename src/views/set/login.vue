@@ -60,7 +60,7 @@ export default {
     xhr.setRequestHeader("Content-type","application/json");
     xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
     }));
     if(this.isAlreadyLogin) router.push('/');
   },
@@ -80,7 +80,7 @@ export default {
         if(xhr.readyState === 4 && xhr.status === 200){
           let res = JSON.parse(xhr.response);
           if(res.isSuccess){
-            localStorage.setItem('loginCodeName', res.loginCodeName);
+            localStorage.setItem('loginCode', res.loginCode);
             localStorage.setItem('email', _this.inputmodel[0].val);
             _this.$emit('login');
             router.push('/');

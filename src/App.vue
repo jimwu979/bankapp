@@ -25,7 +25,7 @@ export default {
     }
   },
   created(){
-    if(localStorage.getItem('email') && localStorage.getItem('loginCodeName')){
+    if(localStorage.getItem('email') && localStorage.getItem('loginCode')){
       this.getAccount();
     }
   },
@@ -55,7 +55,7 @@ export default {
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
       }));
     },
     toggleNav(){

@@ -169,7 +169,7 @@ export default {
           let formData = new FormData();
           let uploadInputTag = document.getElementById('uploadImage');
           formData.append('email', localStorage.getItem('email'));
-          formData.append('loginCodeName', localStorage.getItem('loginCodeName'));
+          formData.append('loginCode', localStorage.getItem('loginCode'));
           formData.append('file', uploadInputTag.files[0]);
           let _this = this;
           let xhr = new XMLHttpRequest();
@@ -203,7 +203,7 @@ export default {
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.send(JSON.stringify({
               email: localStorage.getItem('email'),
-              loginCodeName: localStorage.getItem('loginCodeName'),
+              loginCode: localStorage.getItem('loginCode'),
               newName: resetName.val,
             }));
             this.closeLightbox();
@@ -230,7 +230,7 @@ export default {
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.send(JSON.stringify({
               email: localStorage.getItem('email'),
-              loginCodeName: localStorage.getItem('loginCodeName'),
+              loginCode: localStorage.getItem('loginCode'),
               newEmail: resetEmail.val,
             }));
             this.closeLightbox();
@@ -262,7 +262,7 @@ export default {
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.send(JSON.stringify({
               email: localStorage.getItem('email'),
-              loginCodeName: localStorage.getItem('loginCodeName'),
+              loginCode: localStorage.getItem('loginCode'),
               oldPassword: pwd_ori.val,
               newPassword: pwd_new.val,
             }));
@@ -317,10 +317,10 @@ export default {
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
       }));
       if(result){
-        localStorage.removeItem('loginCodeName');
+        localStorage.removeItem('loginCode');
         localStorage.removeItem('email');
       }
     },

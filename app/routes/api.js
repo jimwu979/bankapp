@@ -29,7 +29,7 @@ router.post('/signUp', function(req, res, next) {
         name: req.body.name,
         email: req.body.email,
         password: newPassword,
-        loginCodeName: '',
+        loginCode: '',
         photo: '',
       });
       newAccount.save(function(err, data){
@@ -50,15 +50,15 @@ router.post('/login', function(req, res, next) {
     email: req.body.email,
     password: newPassword,
   }, function(err, data){
-    let loginCodeName = Math.floor(Math.random() * Math.pow(10, 20)).toString();
+    let loginCode = Math.floor(Math.random() * Math.pow(10, 20)).toString();
     accountModel.update(
-      {email: req.body.email}, {loginCodeName: loginCodeName}, 
+      {email: req.body.email}, {loginCode: loginCode}, 
       function(err){
       if(err) console.log(err);
     });
     let result = {
       isSuccess: data == null ? false : true,
-      loginCodeName: loginCodeName
+      loginCode: loginCode
     };
     res.send(result);
   });
@@ -71,7 +71,7 @@ router.post('/alreadyLogin', function(req, res, next) {
   }
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     result.alreadyLogin = (data !== null) ? true : false;
     res.send(result);
@@ -82,10 +82,10 @@ router.post('/alreadyLogin', function(req, res, next) {
 router.post('/logout', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     accountModel.update(
-      {email: req.body.email}, {loginCodeName: ''}, 
+      {email: req.body.email}, {loginCode: ''}, 
       function(err){
         res.send({
           isSuccess: true
@@ -98,7 +98,7 @@ router.post('/logout', function(req, res, next) {
 router.post('/resetName', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountData){
     if(accountData !== null){
       accountModel.updateOne(
@@ -115,7 +115,7 @@ router.post('/resetName', function(req, res, next) {
 router.post('/resetEmail', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountData){
     if(accountData !== null){
       accountModel.updateOne(
@@ -147,7 +147,7 @@ router.post('/resetPassword', function(req, res, next) {
   let newPassword = crypto.createHash("md5").update(req.body.newPassword).digest("hex");
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountData){
     if(accountData !== null){
       accountModel.updateOne(
@@ -164,7 +164,7 @@ router.post('/resetPassword', function(req, res, next) {
 router.post('/getAccount', function(req, res, next){
   accountModel.findOne({
     'email': req.body.email,
-    'loginCodeName': req.body.loginCodeName,
+    'loginCode': req.body.loginCode,
   }, function(err, data){
     res.send(data);
   });
@@ -175,7 +175,7 @@ router.post('/getAccount', function(req, res, next){
 router.post('/createClass', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     if(data !== null){
       classModel.find({
@@ -203,7 +203,7 @@ router.post('/createClass', function(req, res, next) {
 router.post('/readClass', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountEmail){
     if(accountEmail != null){
       classModel.find({
@@ -220,7 +220,7 @@ router.post('/readClass', function(req, res, next) {
 router.post('/updateClass', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, account){
     if(account != null){
       classModel.update(
@@ -243,7 +243,7 @@ router.post('/updateClass', function(req, res, next) {
 router.post('/deleteClass', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountData){
     if(accountData !== null){
       classModel.deleteOne({
@@ -274,7 +274,7 @@ router.post('/deleteClass', function(req, res, next) {
 router.post('/createRecord', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName
+    loginCode: req.body.loginCode
   }, function(err, data){
     if(data !== null){
       let newRecord = new recordModel({
@@ -301,7 +301,7 @@ router.post('/createRecord', function(req, res, next) {
 router.post('/readRecord_aMonth', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     if(data !== null){
       recordModel.find({
@@ -324,7 +324,7 @@ router.post('/readRecord_aMonth', function(req, res, next) {
 router.post('/readRecord_aClasswithinAMonth', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     if(data !== null){
       recordModel.find({
@@ -341,7 +341,7 @@ router.post('/readRecord_aClasswithinAMonth', function(req, res, next) {
 router.post('/readRecord_findOne', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, data){
     if(data !== null){
       recordModel.findOne({
@@ -359,7 +359,7 @@ router.post('/readRecord_findOne', function(req, res, next) {
 router.post('/updateRecord', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, account){
     if(account !== null){
       recordModel.update({
@@ -387,7 +387,7 @@ router.post('/updateRecord', function(req, res, next) {
 router.post('/deleteRecord', function(req, res, next) {
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(err, accountData){
     if(accountData !== null){
       recordModel.remove({
@@ -413,7 +413,7 @@ router.post('/initStore', function(req, res, next){
   };
   accountModel.findOne({
     email: req.body.email,
-    loginCodeName: req.body.loginCodeName,
+    loginCode: req.body.loginCode,
   }, function(accountErr, accountData){
     if(accountData !== null){
       resData.name = accountData.name;

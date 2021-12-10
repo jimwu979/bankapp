@@ -129,7 +129,7 @@ export default {
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
         classId: this.deleteTarget.id,
         isIncome: this.deleteTarget.type == 'income' ? true : false,
         order: this. deleteTarget.order,

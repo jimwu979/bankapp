@@ -37,7 +37,7 @@ router.beforeEach((to, from) => {
     xhr.setRequestHeader("Content-type","application/json");
     xhr.send(JSON.stringify({
         email: localStorage.getItem('email'),
-        loginCodeName: localStorage.getItem('loginCodeName'),
+        loginCode: localStorage.getItem('loginCode'),
     }));
     if(!isAlreadyLogin) router.push('/login');
   }
